@@ -11,7 +11,7 @@ const Navbar = ({}: Props) => {
 
   return (
     <div className="w-full bg-stone-500">
-      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-4 text-white sm:px-12 md:px-24">
+      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-2 text-white sm:px-12 md:px-24">
         <Link href="/" className="flex w-10 items-center md:w-14">
           <Image src={logo} alt="leetcode clone logo" />
           <span className="block">LeetCode</span>

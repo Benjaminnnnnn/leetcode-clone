@@ -7,11 +7,11 @@ export default function Home() {
       <main className="min-h-screen w-screen bg-neutral-700">
         <Homebar></Homebar>
 
-        <div className="relative mx-auto flex max-w-screen-2xl justify-center overflow-x-auto px-6 py-4 sm:py-10">
-          <table className="w-4/5 text-left text-sm">
+        <div className="relative mx-auto flex max-w-screen-2xl overflow-x-auto py-4 sm:px-6 sm:py-10">
+          <table className="mx-auto w-full text-left text-sm sm:w-4/5">
             <thead className="text-xs font-medium uppercase text-gray-400">
               <tr>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-4 py-3">
                   Status
                 </th>
                 <th scope="col" className="px-6 py-3">
@@ -23,7 +23,7 @@ export default function Home() {
                 <th scope="col" className="px-6 py-3">
                   Difficulty
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-4 py-3">
                   Solution
                 </th>
               </tr>

@@ -14,7 +14,7 @@ export const problems: Problem[] = [
     difficulty: "Easy",
     category: "Array",
     order: 1,
-    videoId: "8-k1C6ehKuw",
+    videoId: "KLlXCFG5TnA",
   },
   {
     id: "reverse-linked-list",
@@ -22,7 +22,7 @@ export const problems: Problem[] = [
     difficulty: "Hard",
     category: "Linked List",
     order: 2,
-    videoId: "",
+    videoId: "G0_I-ZF0S38",
   },
   {
     id: "jump-game",
@@ -38,7 +38,7 @@ export const problems: Problem[] = [
     difficulty: "Easy",
     category: "Stack",
     order: 4,
-    videoId: "xty7fr-k0TU",
+    videoId: "WTzjTskDFMg",
   },
   {
     id: "search-a-2d-matrix",
@@ -46,7 +46,7 @@ export const problems: Problem[] = [
     difficulty: "Medium",
     category: "Binary Search",
     order: 5,
-    videoId: "ZfFl4torNg4",
+    videoId: "Ber2pi2C0j0",
   },
   {
     id: "container-with-most-water",
@@ -60,7 +60,7 @@ export const problems: Problem[] = [
     id: "merge-intervals",
     title: "Merge Intervals",
     difficulty: "Medium",
-    category: "intervals",
+    category: "Intervals",
     order: 7,
     videoId: "",
   },
@@ -70,7 +70,7 @@ export const problems: Problem[] = [
     difficulty: "Easy",
     category: "Tree",
     order: 8,
-    videoId: "4qYTqOiRMoM",
+    videoId: "hTM3phVI6YQ",
   },
   {
     id: "best-time-to-buy-and-sell-stock",
@@ -86,6 +86,6 @@ export const problems: Problem[] = [
     difficulty: "Medium",
     category: "Backtracking",
     order: 10,
-    videoId: "",
+    videoId: "1pkOgXD63yU",
   },
 ];
