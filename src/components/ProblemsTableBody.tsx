@@ -10,12 +10,14 @@ import YouTube from "react-youtube";
 type Props = {};
 
 const ProblemsTableBody = (props: Props) => {
-  const [showVideo, setShowVideo] = useState(false);
-  const [videoId, setVideoId] = useState("");
+  const [video, setVideo] = useState({
+    isOpen: false,
+    videoId: "",
+  });
 
   // disable scroll when modal is open
   useEffect(() => {
-    if (showVideo) {
+    if (video.isOpen) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
@@ -23,7 +25,7 @@ const ProblemsTableBody = (props: Props) => {
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
-  }, [showVideo]);
+  }, [video.isOpen]);
 
   return (
     <>
@@ -67,8 +69,10 @@ const ProblemsTableBody = (props: Props) => {
                   <RiFileVideoLine
                     className="cursor-pointer text-xl text-purple-500"
                     onClick={() => {
-                      setShowVideo(true);
-                      setVideoId(problem.videoId!);
+                      setVideo({
+                        isOpen: true,
+                        videoId: problem.videoId!,
+                      });
                     }}
                   ></RiFileVideoLine>
                 ) : (
@@ -81,15 +85,17 @@ const ProblemsTableBody = (props: Props) => {
       </tbody>
 
       {/* youtube video modal */}
-      {showVideo && (
+      {video.isOpen && (
         <tfoot
           className="fixed inset-0 flex cursor-pointer items-center justify-center bg-black/70"
-          onClick={() => setShowVideo(false)}
+          onClick={() =>
+            setVideo((prevVideo) => ({ ...prevVideo, isOpen: false }))
+          }
         >
           <div className="relative flex h-screen w-3/5 flex-col justify-center gap-2">
             <IoMdClose className="h-8 w-8 cursor-pointer self-end text-white"></IoMdClose>
             <YouTube
-              videoId={videoId}
+              videoId={video.videoId}
               loading="lazy"
               iframeClassName="w-full aspect-video"
             ></YouTube>
