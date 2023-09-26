@@ -44,7 +44,7 @@ const Auth = () => {
     };
   }, [isOpen]);
 
-  if (user) {
+  if (user && !loading) {
     return (
       <>
         <p className="px-4 py-2">User already signed in. Redirecting...</p>

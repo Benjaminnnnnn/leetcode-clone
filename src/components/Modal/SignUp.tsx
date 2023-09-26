@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import Button from "../Form/Button";
 import Input from "../Form/Input";
 
@@ -42,9 +43,21 @@ const SignUp = (props: Props) => {
       if (newUser) {
         router.push("/");
         dispatch(authModalClose());
+      } else {
+        toast.error("User already exists!", {
+          position: "top-center",
+          autoClose: 3000,
+          theme: "dark",
+          pauseOnFocusLoss: true,
+        });
       }
     } catch (error) {
-      alert(error);
+      toast.error(error as string, {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+        pauseOnFocusLoss: true,
+      });
     }
   };
 

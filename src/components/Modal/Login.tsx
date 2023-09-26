@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { auth } from "@/firebase/firebase";
 import { useRouter } from "next/navigation";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { toast } from "react-toastify";
 import Button from "../Form/Button";
 import Input from "../Form/Input";
 
@@ -41,9 +42,21 @@ const Login = (props: Props) => {
       if (loggedUser) {
         router.push("/");
         dispatch(authModalClose());
+      } else {
+        toast.error("Unable to log in.", {
+          position: "top-center",
+          autoClose: 3000,
+          theme: "dark",
+          pauseOnFocusLoss: true,
+        });
       }
     } catch (error) {
-      alert(error);
+      toast.error(error as string, {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+        pauseOnFocusLoss: true,
+      });
     }
   };
 

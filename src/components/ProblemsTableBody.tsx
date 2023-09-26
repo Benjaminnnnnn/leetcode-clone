@@ -15,6 +15,20 @@ const ProblemsTableBody = (props: Props) => {
     videoId: "",
   });
 
+  const closeVideo = () => {
+    setVideo((prevVideo) => ({ ...prevVideo, isOpen: false }));
+  };
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeVideo();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, []);
+
   // disable scroll when modal is open
   useEffect(() => {
     if (video.isOpen) {
@@ -71,7 +85,7 @@ const ProblemsTableBody = (props: Props) => {
                     onClick={() => {
                       setVideo({
                         isOpen: true,
-                        videoId: problem.videoId!,
+                        videoId: problem.videoId as string,
                       });
                     }}
                   ></RiFileVideoLine>
@@ -87,13 +101,14 @@ const ProblemsTableBody = (props: Props) => {
       {/* youtube video modal */}
       {video.isOpen && (
         <tfoot
-          className="fixed inset-0 flex cursor-pointer items-center justify-center bg-black/70"
-          onClick={() =>
-            setVideo((prevVideo) => ({ ...prevVideo, isOpen: false }))
-          }
+          className="fixed inset-0 flex items-center justify-center bg-black/70"
+          // onClick={closeVideo}
         >
           <div className="relative flex h-screen w-3/5 flex-col justify-center gap-2">
-            <IoMdClose className="h-8 w-8 cursor-pointer self-end text-white"></IoMdClose>
+            <IoMdClose
+              className="h-8 w-8 cursor-pointer self-end text-white"
+              onClick={closeVideo}
+            ></IoMdClose>
             <YouTube
               videoId={video.videoId}
               loading="lazy"

@@ -1,9 +1,8 @@
 import { auth } from "@/firebase/firebase";
 import { emailRegex } from "@/utils/formValidation";
-import { useEffect, useState } from "react";
 import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import Button from "../Form/Button";
 import Input from "../Form/Input";
 
@@ -14,9 +13,6 @@ type FormState = {
 };
 
 const ResetPassword = (props: Props) => {
-  const [success, setSuccess] = useState(false);
-  const dispatch = useDispatch();
-
   const {
     register,
     handleSubmit,
@@ -31,20 +27,23 @@ const ResetPassword = (props: Props) => {
   const handleReset: SubmitHandler<FormState> = async (data) => {
     try {
       const success = await sendPasswordResetEmail(data.email);
-      setSuccess(success);
+      if (success) {
+        toast.success("Reset password email sent!", {
+          position: "top-center",
+          autoClose: 3000,
+          theme: "dark",
+          pauseOnFocusLoss: true,
+        });
+      }
     } catch (error) {
-      alert("Failed to send reset password email.");
+      toast.error("Failed to send reset password email.", {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+        pauseOnFocusLoss: true,
+      });
     }
   };
-
-  useEffect(() => {
-    const id = setTimeout(() => {
-      setSuccess(false);
-      // dispatch(authModalClose());
-    }, 5000);
-
-    return () => clearTimeout(id);
-  });
 
   return (
     <>
@@ -74,14 +73,6 @@ const ResetPassword = (props: Props) => {
             },
           }}
           placeholder="example@domain.com"
-          onSubmitSuccess={{
-            value: success,
-            message: "Reset password email sent!",
-          }}
-          onSubmitError={{
-            value: !!error,
-            message: "Unable to reset password",
-          }}
         ></Input>
         <Button
           isValid={isValid && !sending}

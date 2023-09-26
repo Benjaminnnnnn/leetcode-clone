@@ -5,7 +5,7 @@ type Props = {
 };
 
 const ProblemDetail = ({ params }: Props) => {
-  return <div>Problem: {params.id}</div>;
+  return <>{/* <Homebar problemPage={true}></Homebar> */}</>;
 };
 
 export default ProblemDetail;
