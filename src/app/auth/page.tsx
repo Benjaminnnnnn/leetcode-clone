@@ -2,7 +2,7 @@
 // import code from "@/asset/auth/code.svg";
 import code from "@/asset/auth/code_2.png";
 import AuthModal from "@/components/Modal/AuthModal";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 import { auth } from "@/firebase/firebase";
 import { selectOpen, signup } from "@/redux/features/auth/authSlice";
 import { motion } from "framer-motion";

@@ -1,4 +1,4 @@
-import Homebar from "@/components/Homebar";
+import Homebar from "@/components/Navbar/Homebar";
 import ProblemsTableBody from "@/components/ProblemsTableBody";
 
 export default function Home() {
