@@ -11,8 +11,8 @@ import { auth } from "@/firebase/firebase";
 import { useRouter } from "next/navigation";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
-import Button from "../Form/Button";
-import Input from "../Form/Input";
+import Button from "../Form/FormButton";
+import Input from "../Form/FormInput";
 
 type Props = {};
 type FormState = {

@@ -12,8 +12,8 @@ import { CgProfile } from "react-icons/cg";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { PiListFill } from "react-icons/pi";
 import { useDispatch } from "react-redux";
-import Tooltip from "../Tooltip";
-import KeyButton from "./KeyButton";
+import ButtonWithTooltip from "../Button/ButtonWithTooltip";
+import Tooltip from "../Tooltip/Tooltip";
 import Logout from "./Logout";
 
 type Props = {
@@ -64,27 +64,25 @@ const Homebar = ({ problemPage }: Props) => {
 
         {problemPage && (
           <div className="flex items-center justify-center gap-1">
-            <button className="group relative flex items-center gap-1 px-2 py-1">
+            <ButtonWithTooltip>
               <FaChevronLeft></FaChevronLeft>
-              <Tooltip>
-                Previous Question <KeyButton keys={["Ctrl", "j"]}></KeyButton>
+              <Tooltip keyboardNavigation={["Ctrl", "j"]}>
+                Previous Question
               </Tooltip>
-            </button>
+            </ButtonWithTooltip>
 
-            <button className="group relative flex items-center gap-1 px-2 py-1">
+            <ButtonWithTooltip>
               <PiListFill></PiListFill>
               <p>Problem List</p>
-              <Tooltip>
-                Problem List <KeyButton keys={["Ctrl", "h"]}></KeyButton>
-              </Tooltip>
-            </button>
+              <Tooltip keyboardNavigation={["Ctrl", "h"]}>Problem List</Tooltip>
+            </ButtonWithTooltip>
 
-            <button className="group relative flex items-center px-2 py-1">
+            <ButtonWithTooltip>
               <FaChevronRight></FaChevronRight>
-              <Tooltip>
-                Next Question <KeyButton keys={["Ctrl", "k"]}></KeyButton>
+              <Tooltip keyboardNavigation={["Ctrl", "k"]}>
+                Next Question
               </Tooltip>
-            </button>
+            </ButtonWithTooltip>
           </div>
         )}
 
@@ -103,10 +101,10 @@ const Homebar = ({ problemPage }: Props) => {
               </Link>
             ) : (
               <div className="flex cursor-pointer items-center gap-1 text-xl sm:gap-2 sm:text-3xl">
-                <button className="group relative block">
+                <ButtonWithTooltip>
                   <CgProfile></CgProfile>
                   <Tooltip>{user.email}</Tooltip>
-                </button>
+                </ButtonWithTooltip>
                 <Logout></Logout>
               </div>
             ))}

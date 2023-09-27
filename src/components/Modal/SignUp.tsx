@@ -6,8 +6,8 @@ import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import Button from "../Form/Button";
-import Input from "../Form/Input";
+import Button from "../Form/FormButton";
+import Input from "../Form/FormInput";
 
 type Props = {};
 

@@ -3,8 +3,8 @@ import { emailRegex } from "@/utils/formValidation";
 import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import Button from "../Form/Button";
-import Input from "../Form/Input";
+import Button from "../Form/FormButton";
+import Input from "../Form/FormInput";
 
 type Props = {};
 
