@@ -54,10 +54,11 @@ const Auth = () => {
 
   return (
     <>
+      <div className="fixed inset-0 -z-10 hidden bg-stone-100 2xl:block"></div>
       <div className={`bg-neutral-700} w-screen`}>
         <div className="mx-auto flex min-h-screen flex-col">
           <Navbar></Navbar>
-          <div className="mx-auto grid w-full flex-1 grid-rows-3 sm:grid-flow-dense sm:grid-cols-2 sm:grid-rows-2">
+          <div className="mx-auto grid w-full max-w-screen-2xl flex-1 grid-rows-3 sm:grid-flow-dense sm:grid-cols-2 sm:grid-rows-2">
             <div className="pointer-events-none hidden select-none items-center justify-center bg-neutral-700 sm:flex">
               <motion.div
                 animate={{ y: [0, 12, 0, -12, 0] }}
@@ -75,7 +76,7 @@ const Auth = () => {
                 ></Image>
               </motion.div>
             </div>
-            <div className="flex flex-col items-center justify-center gap-4 bg-neutral-700 sm:col-start-2 sm:col-end-3  sm:gap-6">
+            <div className="flex flex-col items-center justify-center gap-4 bg-neutral-700 sm:col-start-2 sm:col-end-3 sm:gap-6">
               <h1 className="text-xl font-medium text-white sm:text-2xl md:text-4xl">
                 Learn through Code
               </h1>

@@ -10,10 +10,14 @@ const Navbar = ({}: Props) => {
   const dispatch = useDispatch();
 
   return (
-    <div className="w-full bg-stone-500">
-      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-2 text-white sm:px-12 md:px-24">
-        <Link href="/" className="flex w-10 items-center md:w-14">
-          <Image src={logo} alt="leetcode clone logo" />
+    <div className="mx-auto w-full max-w-screen-2xl bg-stone-500">
+      <div className="mx-auto flex items-center justify-between px-4 py-2 text-sm text-white sm:px-12 sm:text-base md:px-24 2xl:px-12">
+        <Link href="/" className="relative flex items-center">
+          <Image
+            className="w-10 md:w-12"
+            src={logo}
+            alt="leetcode clone logo"
+          />
           <span className="block">LeetCode</span>
         </Link>
         <div className="flex items-center">

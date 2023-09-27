@@ -6,7 +6,7 @@ import { login } from "@/redux/features/auth/authSlice";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { CgProfile } from "react-icons/cg";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -17,20 +17,24 @@ import Tooltip from "../Tooltip/Tooltip";
 import Logout from "./Logout";
 
 type Props = {
-  problemPage?: boolean;
+  problem?: string;
 };
 
 /**
  * This file is a temporary solution to react-redux bug. When used in conjunction
  * with the app router of Next.js, the root route / cannot access redux store.
  */
-const Homebar = ({ problemPage }: Props) => {
+const Homebar = ({ problem }: Props) => {
   const [user, loading, error] = useAuthState(auth);
   const dispatch = useDispatch();
   const router = useRouter();
+  const [problemIndex, setProblemIndex] = useState(0);
+
+  console.log(problem);
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.ctrlKey) {
+      e.preventDefault();
       switch (e.key) {
         case "h":
           router.push("/");
@@ -52,36 +56,45 @@ const Homebar = ({ problemPage }: Props) => {
 
   return (
     <div className="w-full border-gray-300 bg-stone-500">
-      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-2 text-sm font-medium text-white sm:px-12 sm:text-base md:px-24">
+      <div
+        className={`mx-auto flex ${
+          !problem && "max-w-screen-2xl"
+        } items-center justify-between px-4 py-2 text-sm font-medium text-white sm:px-12 sm:text-base md:px-24 2xl:px-12`}
+      >
         <Link href="/" className="relative flex items-center">
           <Image
-            className="w-10 md:w-14"
+            className="w-10 md:w-12"
             src={logo}
             alt="leetcode clone logo"
           />
           <span className="block">LeetCode</span>
         </Link>
 
-        {problemPage && (
+        {problem && (
           <div className="flex items-center justify-center gap-1">
             <ButtonWithTooltip>
               <FaChevronLeft></FaChevronLeft>
-              <Tooltip keyboardNavigation={["Ctrl", "j"]}>
-                Previous Question
-              </Tooltip>
+              <Tooltip
+                text="Previous Question"
+                keyboardNavigation={["Ctrl", "j"]}
+              ></Tooltip>
             </ButtonWithTooltip>
 
             <ButtonWithTooltip>
               <PiListFill></PiListFill>
               <p>Problem List</p>
-              <Tooltip keyboardNavigation={["Ctrl", "h"]}>Problem List</Tooltip>
+              <Tooltip
+                text="Problem List"
+                keyboardNavigation={["Ctrl", "h"]}
+              ></Tooltip>
             </ButtonWithTooltip>
 
             <ButtonWithTooltip>
               <FaChevronRight></FaChevronRight>
-              <Tooltip keyboardNavigation={["Ctrl", "k"]}>
-                Next Question
-              </Tooltip>
+              <Tooltip
+                text="Next Question"
+                keyboardNavigation={["Ctrl", "k"]}
+              ></Tooltip>
             </ButtonWithTooltip>
           </div>
         )}
@@ -103,7 +116,7 @@ const Homebar = ({ problemPage }: Props) => {
               <div className="flex cursor-pointer items-center gap-1 text-xl sm:gap-2 sm:text-3xl">
                 <ButtonWithTooltip>
                   <CgProfile></CgProfile>
-                  <Tooltip>{user.email}</Tooltip>
+                  <Tooltip text={user.email as string}></Tooltip>
                 </ButtonWithTooltip>
                 <Logout></Logout>
               </div>
