@@ -104,15 +104,17 @@ const ProblemsTableBody = (props: Props) => {
           className="fixed inset-0 flex items-center justify-center bg-black/70"
           // onClick={closeVideo}
         >
-          <div className="relative flex h-screen w-3/5 flex-col justify-center gap-2">
+          <div className="hd:w-2/5 relative flex h-screen w-full flex-col justify-center gap-2 md:w-1/2">
             <IoMdClose
               className="h-8 w-8 cursor-pointer self-end text-white"
               onClick={closeVideo}
             ></IoMdClose>
+
             <YouTube
               videoId={video.videoId}
               loading="lazy"
-              iframeClassName="w-full aspect-video"
+              className="aspect-video"
+              iframeClassName="w-full h-full"
             ></YouTube>
           </div>
         </tfoot>

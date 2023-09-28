@@ -14,6 +14,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { PiListFill } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import ButtonWithTooltip from "../Button/ButtonWithTooltip";
+import Timer from "../Timer/Timer";
 import Logout from "./Logout";
 
 type Props = {
@@ -32,18 +33,14 @@ const Homebar = ({ problem }: Props) => {
     problems.findIndex((p) => p.id === problem),
   );
 
-  console.log("pidx", problemIndex);
-
   const handlePreviousProblem = () => {
-    console.log("prev problem", problemIndex);
-    if (problemIndex > 0) {
+    if (problem && problemIndex > 0) {
       setProblemIndex((prevIndex) => prevIndex - 1);
     }
   };
 
   const handleNextProblem = () => {
-    console.log("next problem", problemIndex);
-    if (problemIndex < problems.length - 1) {
+    if (problem && problemIndex < problems.length - 1) {
       setProblemIndex((prevIndex) => prevIndex + 1);
     }
   };
@@ -66,12 +63,17 @@ const Homebar = ({ problem }: Props) => {
   };
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
+    if (problem) {
+      window.addEventListener("keydown", handleKeyPress);
+      return () => window.removeEventListener("keydown", handleKeyPress);
+    }
   }, []);
 
   useEffect(() => {
-    router.push(`/problems/${problems[problemIndex].id}`);
+    if (problem) {
+      console.log("go to ", problemIndex);
+      router.push(`/problems/${problems[problemIndex].id}`);
+    }
   }, [problemIndex, router]);
 
   return (
@@ -87,11 +89,11 @@ const Homebar = ({ problem }: Props) => {
             src={logo}
             alt="leetcode clone logo"
           />
-          <span className="block">LeetCode</span>
+          <span className="hidden sm:block">LeetCode</span>
         </Link>
 
         {problem && (
-          <div className="flex items-center justify-center gap-1">
+          <div className="hidden items-center justify-center gap-1 sm:flex">
             <ButtonWithTooltip
               tooltip={{
                 text: "Previous Question",
@@ -143,6 +145,14 @@ const Homebar = ({ problem }: Props) => {
               </Link>
             ) : (
               <div className="flex cursor-pointer items-center gap-1 text-xl sm:gap-2 sm:text-3xl">
+                {problem && (
+                  <ButtonWithTooltip
+                    tooltip={{ text: "Toggle timer" }}
+                    className="rounded hover:bg-stone-400 max-sm:hidden"
+                  >
+                    <Timer></Timer>
+                  </ButtonWithTooltip>
+                )}
                 <ButtonWithTooltip tooltip={{ text: user.email as string }}>
                   <CgProfile></CgProfile>
                 </ButtonWithTooltip>
