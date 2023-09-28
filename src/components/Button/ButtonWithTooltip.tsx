@@ -17,16 +17,13 @@ type TooltipProps = {
 
 const KeyButton = ({ keys }: KeyButtonProps) => {
   return (
-    <div className="flex items-center gap-1">
+    <p className="flex items-center gap-1">
       {keys.map((key, idx) => (
-        <kbd
-          className="rounded border border-gray-50 px-1 font-medium"
-          key={idx}
-        >
+        <kbd className="rounded border border-gray-50 px-1" key={idx}>
           {key}
         </kbd>
       ))}
-    </div>
+    </p>
   );
 };
 
@@ -41,19 +38,19 @@ const Tooltip = ({ children }: TooltipProps) => {
 const ButtonWithTooltip = ({ children, tooltip, className }: Props) => {
   return (
     <>
-      <div
+      <button
         className={`group relative flex items-center gap-1 px-2 py-1 ${className} disabled:opacity-50`}
       >
         {children}
         {tooltip && (
           <Tooltip>
-            {tooltip.text}
+            <p>{tooltip.text}</p>
             {tooltip.keyboardNavigation && (
               <KeyButton keys={tooltip.keyboardNavigation}></KeyButton>
             )}
           </Tooltip>
         )}
-      </div>
+      </button>
     </>
   );
 };

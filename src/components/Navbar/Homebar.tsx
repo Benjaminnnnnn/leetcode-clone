@@ -13,7 +13,6 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { PiListFill } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import ButtonWithTooltip from "../Button/ButtonWithTooltip";
-import Tooltip from "../Tooltip/Tooltip";
 import Logout from "./Logout";
 
 type Props = {
@@ -72,29 +71,32 @@ const Homebar = ({ problem }: Props) => {
 
         {problem && (
           <div className="flex items-center justify-center gap-1">
-            <ButtonWithTooltip>
+            <ButtonWithTooltip
+              tooltip={{
+                text: "Previous Question",
+                keyboardNavigation: ["Ctrl", "J"],
+              }}
+            >
               <FaChevronLeft></FaChevronLeft>
-              <Tooltip
-                text="Previous Question"
-                keyboardNavigation={["Ctrl", "j"]}
-              ></Tooltip>
             </ButtonWithTooltip>
 
-            <ButtonWithTooltip>
+            <ButtonWithTooltip
+              tooltip={{
+                text: "Problem List",
+                keyboardNavigation: ["Ctrl", "H"],
+              }}
+            >
               <PiListFill></PiListFill>
               <p>Problem List</p>
-              <Tooltip
-                text="Problem List"
-                keyboardNavigation={["Ctrl", "h"]}
-              ></Tooltip>
             </ButtonWithTooltip>
 
-            <ButtonWithTooltip>
+            <ButtonWithTooltip
+              tooltip={{
+                text: "Next Question",
+                keyboardNavigation: ["Ctrl", "K"],
+              }}
+            >
               <FaChevronRight></FaChevronRight>
-              <Tooltip
-                text="Next Question"
-                keyboardNavigation={["Ctrl", "k"]}
-              ></Tooltip>
             </ButtonWithTooltip>
           </div>
         )}
@@ -114,9 +116,8 @@ const Homebar = ({ problem }: Props) => {
               </Link>
             ) : (
               <div className="flex cursor-pointer items-center gap-1 text-xl sm:gap-2 sm:text-3xl">
-                <ButtonWithTooltip>
+                <ButtonWithTooltip tooltip={{ text: user.email as string }}>
                   <CgProfile></CgProfile>
-                  <Tooltip text={user.email as string}></Tooltip>
                 </ButtonWithTooltip>
                 <Logout></Logout>
               </div>
