@@ -145,14 +145,7 @@ const Homebar = ({ problem }: Props) => {
               </Link>
             ) : (
               <div className="flex cursor-pointer items-center gap-1 text-xl sm:gap-2 sm:text-3xl">
-                {problem && (
-                  <ButtonWithTooltip
-                    tooltip={{ text: "Toggle timer" }}
-                    className="rounded hover:bg-stone-400 max-sm:hidden"
-                  >
-                    <Timer></Timer>
-                  </ButtonWithTooltip>
-                )}
+                {problem && <Timer></Timer>}
                 <ButtonWithTooltip tooltip={{ text: user.email as string }}>
                   <CgProfile></CgProfile>
                 </ButtonWithTooltip>

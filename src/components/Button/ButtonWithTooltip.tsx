@@ -37,9 +37,9 @@ const Tooltip = ({ children }: TooltipProps) => {
 
 const ButtonWithTooltip = ({
   children,
-  disabled,
   tooltip,
   className,
+  ...props
 }: Props) => {
   return (
     <>
@@ -47,7 +47,7 @@ const ButtonWithTooltip = ({
         className={`group relative flex items-center gap-1 px-2 py-1 disabled:cursor-not-allowed disabled:text-gray-400 disabled:opacity-50 ${
           className && className
         }`}
-        disabled={disabled}
+        {...props}
       >
         {children}
         {tooltip && (
