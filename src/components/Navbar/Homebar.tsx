@@ -2,6 +2,7 @@
 
 import logo from "@/asset/logo.png";
 import { auth } from "@/firebase/firebase";
+import { problems } from "@/mock-data/problems";
 import { login } from "@/redux/features/auth/authSlice";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,9 +28,25 @@ const Homebar = ({ problem }: Props) => {
   const [user, loading, error] = useAuthState(auth);
   const dispatch = useDispatch();
   const router = useRouter();
-  const [problemIndex, setProblemIndex] = useState(0);
+  const [problemIndex, setProblemIndex] = useState(
+    problems.findIndex((p) => p.id === problem),
+  );
 
-  console.log(problem);
+  console.log("pidx", problemIndex);
+
+  const handlePreviousProblem = () => {
+    console.log("prev problem", problemIndex);
+    if (problemIndex > 0) {
+      setProblemIndex((prevIndex) => prevIndex - 1);
+    }
+  };
+
+  const handleNextProblem = () => {
+    console.log("next problem", problemIndex);
+    if (problemIndex < problems.length - 1) {
+      setProblemIndex((prevIndex) => prevIndex + 1);
+    }
+  };
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.ctrlKey) {
@@ -39,10 +56,10 @@ const Homebar = ({ problem }: Props) => {
           router.push("/");
           break;
         case "j":
-          console.log("ctrl+j");
+          handlePreviousProblem();
           break;
         case "k":
-          console.log("ctrl+k");
+          handleNextProblem();
           break;
       }
     }
@@ -52,6 +69,10 @@ const Homebar = ({ problem }: Props) => {
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, []);
+
+  useEffect(() => {
+    router.push(`/problems/${problems[problemIndex].id}`);
+  }, [problemIndex, router]);
 
   return (
     <div className="w-full border-gray-300 bg-stone-500">
@@ -76,25 +97,31 @@ const Homebar = ({ problem }: Props) => {
                 text: "Previous Question",
                 keyboardNavigation: ["Ctrl", "J"],
               }}
+              disabled={problemIndex <= 0}
+              onClick={handlePreviousProblem}
             >
               <FaChevronLeft></FaChevronLeft>
             </ButtonWithTooltip>
 
-            <ButtonWithTooltip
-              tooltip={{
-                text: "Problem List",
-                keyboardNavigation: ["Ctrl", "H"],
-              }}
-            >
-              <PiListFill></PiListFill>
-              <p>Problem List</p>
-            </ButtonWithTooltip>
+            <Link href="/">
+              <ButtonWithTooltip
+                tooltip={{
+                  text: "Problem List",
+                  keyboardNavigation: ["Ctrl", "H"],
+                }}
+              >
+                <PiListFill></PiListFill>
+                <p>Problem List</p>
+              </ButtonWithTooltip>
+            </Link>
 
             <ButtonWithTooltip
               tooltip={{
                 text: "Next Question",
                 keyboardNavigation: ["Ctrl", "K"],
               }}
+              disabled={problemIndex >= problems.length - 1}
+              onClick={handleNextProblem}
             >
               <FaChevronRight></FaChevronRight>
             </ButtonWithTooltip>
