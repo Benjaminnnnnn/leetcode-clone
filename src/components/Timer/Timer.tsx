@@ -24,6 +24,17 @@ const Timer = (props: Props) => {
     setTime(0);
   };
 
+  const handleKeyToggleTimer = (e: KeyboardEvent) => {
+    if (e.shiftKey && e.key === "T") {
+      toggleTimer();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyToggleTimer);
+    return () => window.removeEventListener("keydown", handleKeyToggleTimer);
+  }, []);
+
   useEffect(() => {
     let id: NodeJS.Timeout;
 
@@ -39,16 +50,16 @@ const Timer = (props: Props) => {
   return (
     <>
       <ButtonWithTooltip
-        // tooltip={{ text: "Toggle timer" }}
+        tooltip={{ text: "Toggle timer", keyboardNavigation: ["Shift", "T"] }}
         className="rounded hover:bg-stone-400 max-sm:hidden"
         onClick={toggleTimer}
       >
         {showTimer ? (
           <div className="flex cursor-pointer items-center gap-2 rounded py-2 text-sm sm:text-base">
             <p>{formatTime(time)}</p>
-            <button onClick={resetTimer}>
+            <div onClick={resetTimer}>
               <FiRefreshCcw></FiRefreshCcw>
-            </button>
+            </div>
           </div>
         ) : (
           <IoTimerOutline></IoTimerOutline>
