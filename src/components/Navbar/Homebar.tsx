@@ -46,9 +46,6 @@ const Homebar = ({ problem }: Props) => {
   };
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    if (e.shiftKey) {
-      return;
-    }
     if (e.ctrlKey) {
       e.preventDefault();
       switch (e.key) {
@@ -74,6 +71,7 @@ const Homebar = ({ problem }: Props) => {
 
   useEffect(() => {
     if (problem) {
+      console.log("go to ", problemIndex);
       router.push(`/problems/${problems[problemIndex].id}`);
     }
   }, [problemIndex, router]);
