@@ -9,10 +9,10 @@ type Props = {
 
 const ProblemDetail = ({ params: { id } }: Props) => {
   return (
-    <>
+    <div className="flex h-screen flex-col">
       <Homebar problem={id}></Homebar>
       <Workspace></Workspace>
-    </>
+    </div>
   );
 };
 

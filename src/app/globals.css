@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* dark  scrollbar */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #282828;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4d4d4d;
+}
+
 .split {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -9,17 +22,18 @@
 }
 
 .gutter {
-  background-color: #eee;
+  /* background-color: #eee; */
+  background-color: #737373;
   background-repeat: no-repeat;
   background-position: 50%;
 }
 
 .gutter.gutter-vertical {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=");
-  cursor: col-resize;
+  cursor: row-resize;
 }
 
 .gutter.gutter-horizontal {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
-  cursor: row-resize;
+  cursor: col-resize;
 }

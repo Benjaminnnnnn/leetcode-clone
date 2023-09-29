@@ -1,31 +1,19 @@
+"use client";
 import Split from "react-split";
+import ProblemDescription from "./ProblemDescription/ProblemDescription";
 
 type Props = {};
 
 const Workspace = (props: Props) => {
   return (
-    <Split
-      className="split"
-      direction="vertical"
-      minSize={150}
-      gutterSize={9}
-      dragInterval={2}
-    >
-      <div></div>
-      <div></div>
+    <Split className="split flex w-screen flex-1">
+      <ProblemDescription></ProblemDescription>
+      <div>test</div>
+      {/* <Split className="split" direction="vertical">
+        <ProblemEditor></ProblemEditor>
+        <ProblemTestCase></ProblemTestCase>
+      </Split> */}
     </Split>
-    // <div>
-    //   <Split className="split">
-    //     <ProblemDescription></ProblemDescription>
-    //     <div>
-    //       {/* <Split className="split" direction="vertical">
-    //         <ProblemEditor></ProblemEditor>
-    //         <ProblemTestCase></ProblemTestCase>
-    //       </Split> */}
-    //       split
-    //     </div>
-    //   </Split>
-    // </div>
   );
 };
 
