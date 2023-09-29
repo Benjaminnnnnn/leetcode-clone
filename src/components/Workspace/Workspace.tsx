@@ -6,7 +6,7 @@ type Props = {};
 
 const Workspace = (props: Props) => {
   return (
-    <Split className="split flex w-screen flex-1">
+    <Split className="split flex w-screen flex-1" minSize={200}>
       <ProblemDescription></ProblemDescription>
       <div>test</div>
       {/* <Split className="split" direction="vertical">

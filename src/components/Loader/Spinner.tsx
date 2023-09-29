@@ -2,10 +2,10 @@ type Props = {};
 
 const Spinner = (props: Props) => {
   return (
-    <div role="status">
+    <div role="status" className="h-full">
       <svg
         aria-hidden="true"
-        className="mr-2 h-6 w-6 animate-spin fill-gray-500 text-gray-200 "
+        className="mr-2 aspect-square w-4 animate-spin fill-gray-500 text-gray-200 "
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
