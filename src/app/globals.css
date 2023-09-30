@@ -33,7 +33,7 @@
   /* background-color: #eee; */
   background-color: #737373;
   background-repeat: no-repeat;
-  background-position: 50%;
+  background-position: center;
 }
 
 .gutter:hover {
@@ -50,11 +50,25 @@
   cursor: col-resize;
 }
 
-.problem-statement code {
+code {
+  border-radius: 2px;
+  border-width: 1px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1rem;
+  padding: 0.125rem;
+  letter-spacing: 1px;
+  white-space: pre-wrap;
+  background-color: hsla(0, 0%, 100%, 0.1);
+  border-color: rgba(247, 250, 255, 0.12);
+  color: rgba(239, 241, 246, 0.75);
+}
+
+/* .problem-statement code {
   background-color: hsla(0, 0%, 100%, 0.1);
   color: rgba(239, 241, 246, 0.75);
   padding: 0 0.1rem;
-}
+} */
 
 .example-card pre {
   background-color: hsla(0, 0%, 100%, 0.1);
@@ -71,4 +85,8 @@
 .example-card pre strong {
   color: white;
   font-size: 1rem;
+}
+
+.example-card pre p {
+  white-space: nowrap;
 }

@@ -30,15 +30,15 @@ const examples = [
 const ProblemDescription = (props: Props) => {
   return (
     <>
-      <div className="bg-neutral-700">
+      <div className="overflow-y-auto bg-neutral-700">
         {/* TAB */}
-        <div className="flex h-11 w-full items-end overflow-x-hidden text-white">
+        <div className="flex h-11 w-full items-end text-white">
           <p className="cursor-pointer rounded-t bg-neutral-600 px-4 py-2 text-xs">
             Description
           </p>
         </div>
 
-        <div className="flex overflow-auto px-0 py-4">
+        <div className="flex px-0 py-4">
           <div className="space-y-3 px-4">
             {/* Problem heading */}
             <div className="flex">
@@ -103,7 +103,9 @@ const ProblemDescription = (props: Props) => {
             <div className="my-8 pb-4">
               <p className="text-sm font-medium text-white">Constraints:</p>
               <ul className="ml-5 list-disc text-white">
-                <li>test</li>
+                <div
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize("") }}
+                ></div>
               </ul>
             </div>
           </div>

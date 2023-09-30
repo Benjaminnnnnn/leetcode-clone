@@ -16,7 +16,9 @@ const ExampleCard = ({
   return (
     <div>
       <p className="font-medium text-white">Example {index + 1}:</p>
-      {img && <img src={img} alt={`example ${index + 1}`} />}
+      {img && (
+        <img src={img} alt={`example ${index + 1}`} className="h-full w-full" />
+      )}
       <div className="example-card">
         <pre>
           <p>

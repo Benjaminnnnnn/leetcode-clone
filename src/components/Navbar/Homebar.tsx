@@ -80,8 +80,9 @@ const Homebar = ({ problem }: Props) => {
     <div className="w-full border-gray-300 bg-stone-500">
       <div
         className={`mx-auto flex ${
-          !problem && "max-w-screen-2xl"
-        } items-center justify-between px-4 py-2 text-sm font-medium text-white sm:px-12 sm:text-base md:px-24 2xl:px-12`}
+          !problem &&
+          "max-w-screen-2xl sm:px-12 sm:text-base md:px-24 2xl:px-12"
+        } items-center justify-between px-4 py-2 text-sm font-medium text-white`}
       >
         <Link href="/" className="relative flex items-center">
           <Image
