@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 /* dark  scrollbar */
 ::-webkit-scrollbar {
   width: 0.5rem;
@@ -28,6 +36,10 @@
   background-position: 50%;
 }
 
+.gutter:hover {
+  background-color: #3b82f6;
+}
+
 .gutter.gutter-vertical {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=");
   cursor: row-resize;
@@ -36,4 +48,27 @@
 .gutter.gutter-horizontal {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
   cursor: col-resize;
+}
+
+.problem-statement code {
+  background-color: hsla(0, 0%, 100%, 0.1);
+  color: rgba(239, 241, 246, 0.75);
+  padding: 0 0.1rem;
+}
+
+.example-card pre {
+  background-color: hsla(0, 0%, 100%, 0.1);
+  border-radius: 0.5rem;
+  color: rgba(239, 241, 246, 0.75);
+  font-size: 0.98rem;
+  line-height: 1.3rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  white-space: pre-wrap;
+}
+
+.example-card pre strong {
+  color: white;
+  font-size: 1rem;
 }
