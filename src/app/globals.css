@@ -12,15 +12,15 @@
 
 /* dark  scrollbar */
 ::-webkit-scrollbar {
-  width: 0.5rem;
+  width: thin;
 }
 
 ::-webkit-scrollbar-track {
-  background: #282828;
+  background: #404040;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4d4d4d;
+  background: #282828;
 }
 
 .split {
@@ -51,7 +51,7 @@
 }
 
 code {
-  border-radius: 2px;
+  border-radius: 3px;
   border-width: 1px;
   font-size: 0.8rem;
   font-weight: 500;
@@ -63,12 +63,6 @@ code {
   border-color: rgba(247, 250, 255, 0.12);
   color: rgba(239, 241, 246, 0.75);
 }
-
-/* .problem-statement code {
-  background-color: hsla(0, 0%, 100%, 0.1);
-  color: rgba(239, 241, 246, 0.75);
-  padding: 0 0.1rem;
-} */
 
 .example-card pre {
   background-color: hsla(0, 0%, 100%, 0.1);

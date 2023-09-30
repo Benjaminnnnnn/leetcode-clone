@@ -3,6 +3,10 @@ type Props = {
   tooltip?: {
     text: string;
     keyboardNavigation?: string[];
+    options?: {
+      alignment?: undefined | "left" | "right";
+      position?: undefined | "compact" | "loose";
+    };
   };
 } & React.ComponentProps<"button">;
 
@@ -12,7 +16,8 @@ type KeyButtonProps = {
 
 type TooltipProps = {
   children: React.ReactNode;
-  keyboardNavigation?: string[];
+  alignment?: string;
+  position?: string;
 };
 
 const KeyButton = ({ keys }: KeyButtonProps) => {
@@ -27,9 +32,37 @@ const KeyButton = ({ keys }: KeyButtonProps) => {
   );
 };
 
-const Tooltip = ({ children }: TooltipProps) => {
+const Tooltip = ({ children, alignment, position }: TooltipProps) => {
+  let alignmentStyles, positionStyles;
+
+  switch (alignment) {
+    case "left":
+      alignmentStyles = "right-1/4";
+      break;
+    case "right":
+      alignmentStyles = "left-1/4";
+      break;
+    default:
+      alignmentStyles = "left-1/2 -translate-x-1/2";
+      break;
+  }
+
+  switch (position) {
+    case "compact":
+      positionStyles = "top-6";
+      break;
+    case "loose":
+      positionStyles = "top-10";
+      break;
+    default:
+      positionStyles = "top-8";
+      break;
+  }
+
   return (
-    <div className="absolute left-1/2 top-8 flex -translate-x-1/2 scale-0 items-center gap-1 whitespace-nowrap rounded bg-black/95 px-2 py-1 text-xs shadow-lg transition-all duration-300 ease-in-out group-hover:scale-100 group-disabled:hidden sm:top-10 sm:text-sm">
+    <div
+      className={`${alignmentStyles} ${positionStyles} absolute top-8 flex scale-0 items-center gap-1 whitespace-nowrap rounded bg-black/95 px-2 py-1 text-xs shadow-lg transition-all duration-300 ease-in-out group-hover:scale-100 group-disabled:hidden `}
+    >
       {children}
     </div>
   );
@@ -51,7 +84,7 @@ const ButtonWithTooltip = ({
       >
         {children}
         {tooltip && (
-          <Tooltip>
+          <Tooltip {...tooltip.options}>
             <p>{tooltip.text}</p>
             {tooltip.keyboardNavigation && (
               <KeyButton keys={tooltip.keyboardNavigation}></KeyButton>

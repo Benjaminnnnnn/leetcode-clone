@@ -147,7 +147,14 @@ const Homebar = ({ problem }: Props) => {
             ) : (
               <div className="flex cursor-pointer items-center gap-1 text-xl sm:gap-2 sm:text-3xl">
                 {problem && <Timer></Timer>}
-                <ButtonWithTooltip tooltip={{ text: user.email as string }}>
+                <ButtonWithTooltip
+                  tooltip={{
+                    text: user.email as string,
+                    options: {
+                      position: "loose",
+                    },
+                  }}
+                >
                   <CgProfile></CgProfile>
                 </ButtonWithTooltip>
                 <Logout></Logout>

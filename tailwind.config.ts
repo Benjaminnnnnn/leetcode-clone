@@ -13,6 +13,12 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      backgroundColor: {
+        "dark-layer-1": "#262626",
+        "dark-layer-2": "#404040",
+        // "dark-layer-1": "#404040",
+        // "dark-layer-2": "#525252",
+      },
       screens: {
         hd: "1920px",
         // => @media (min-width: 1920px) { ... }

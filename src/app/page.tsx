@@ -1,5 +1,5 @@
 import Homebar from "@/components/Navbar/Homebar";
-import ProblemsTableBody from "@/components/ProblemsTableBody";
+import ProblemsTableBody from "@/components/Table/ProblemsTableBody";
 
 export default function Home() {
   return (

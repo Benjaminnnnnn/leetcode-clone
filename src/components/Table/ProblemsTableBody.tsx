@@ -56,8 +56,8 @@ const ProblemsTableBody = (props: Props) => {
           return (
             <tr
               className={`${
-                idx % 2 == 1 && "bg-neutral-600"
-              } border-b border-neutral-700 text-white`}
+                idx % 2 == 1 && "bg-dark-layer-2"
+              } bg-dark-layer-1 text-white`}
               key={problem.id}
             >
               <th className="whitespace-nowrap px-4 py-4 text-green-500">

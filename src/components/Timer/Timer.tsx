@@ -50,7 +50,13 @@ const Timer = (props: Props) => {
   return (
     <>
       <ButtonWithTooltip
-        tooltip={{ text: "Toggle timer", keyboardNavigation: ["Shift", "T"] }}
+        tooltip={{
+          text: "Toggle timer",
+          keyboardNavigation: ["Shift", "T"],
+          options: {
+            position: "loose",
+          },
+        }}
         className="rounded hover:bg-stone-400 max-sm:hidden"
         onClick={toggleTimer}
       >
