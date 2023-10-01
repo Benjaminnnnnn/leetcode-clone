@@ -16,6 +16,7 @@ const config: Config = {
       backgroundColor: {
         "dark-layer-1": "#262626",
         "dark-layer-2": "#404040",
+        "dark-layer-3": "#525252",
         // "dark-layer-1": "#404040",
         // "dark-layer-2": "#525252",
       },

@@ -1,11 +1,15 @@
-type Props = {};
+type Props = {
+  width?: string;
+};
 
-const Spinner = (props: Props) => {
+const Spinner = ({ width }: Props) => {
   return (
     <div role="status" className="h-full">
       <svg
         aria-hidden="true"
-        className="mr-2 aspect-square w-4 animate-spin fill-gray-500 text-gray-200 "
+        className={`aspect-square ${
+          width ? width : "w-4"
+        } animate-spin fill-gray-500 text-gray-200`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

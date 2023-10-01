@@ -61,7 +61,7 @@ const Tooltip = ({ children, alignment, position }: TooltipProps) => {
 
   return (
     <div
-      className={`${alignmentStyles} ${positionStyles} absolute top-8 flex scale-0 items-center gap-1 whitespace-nowrap rounded bg-black/95 px-2 py-1 text-xs shadow-lg transition-all duration-300 ease-in-out group-hover:scale-100 group-disabled:hidden `}
+      className={`${alignmentStyles} ${positionStyles} absolute top-8 z-[9999] flex scale-0 items-center gap-1 whitespace-nowrap rounded bg-black/95 px-2 py-1 text-xs shadow-lg transition-all duration-300 ease-in-out group-hover:scale-100 group-disabled:hidden`}
     >
       {children}
     </div>

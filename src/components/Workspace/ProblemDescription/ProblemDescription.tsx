@@ -1,4 +1,5 @@
-import * as DOMPurify from "dompurify";
+// import * as DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 import { AiFillDislike, AiFillLike, AiFillStar } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
 import ExampleCard from "./Example/ExampleCard";
@@ -11,7 +12,7 @@ const statement =
   "<p className='mt-3'>Given an array of integers <code>nums</code> and an integer <code>target</code>, return <em>indices of the two numbers such that they add up to</em> <code>target</code>.</p><p className='mt-3'>You may assume that each input would have <strong>exactly one solution</strong>, and youmay not use thesame element twice.</p><p className='mt-3'>You can return the answer in any order.</p>";
 
 const constraints =
-  "<li className='mt-2'><code>2 ≤ nums.length ≤ 10</code></li><li className='mt-2'><code>-10 ≤ nums[i] ≤ 10</code></li><li className='mt-2'><code>-10 ≤ target ≤ 10</code></li><li className='mt-2 text-sm'><strong>Only one valid answer exists.</strong></li>";
+  "<li className='mt-2'><code>2 ≤ nums.length ≤ 10<sup>4</sup></code></li><li className='mt-2'><code>-10<sup>4</sup> ≤ nums[i] ≤ 10<sup>4</sup></code></li><li className='mt-2'><code>-10<sup>4</sup> ≤ target ≤ 10<sup>4</sup></code></li><li className='mt-2 text-sm'><strong>Only one valid answer exists.</strong></li>";
 
 const examples = [
   {
@@ -88,6 +89,7 @@ const ProblemDescription = (props: Props) => {
             {/* problem statement */}
             <div className="problem-statement text-sm text-white">
               <div
+                className="space-y-2"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(statement, {
                     ALLOWED_ATTR: ["className"],
@@ -112,7 +114,7 @@ const ProblemDescription = (props: Props) => {
               <p className="text-sm font-medium text-white">Constraints:</p>
               <ul className="ml-5 list-disc text-white">
                 <div
-                  // className="space-y-1"
+                  className="space-y-1"
                   dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(constraints, {
                       ALLOWED_ATTR: ["className"],

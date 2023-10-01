@@ -22,7 +22,7 @@ const PreferenceNav = (props: Props) => {
 
   useEffect(() => {
     const handleKeyFullScreen = (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
+      if (e.ctrlKey && e.shiftKey && e.key === "F") {
         toggleFullScreen();
       }
     };
@@ -49,7 +49,7 @@ const PreferenceNav = (props: Props) => {
             tooltip={{
               text: !isFullScreen ? "Enter Full Screen" : "Exit Full Screen",
               options: { alignment: "left" },
-              keyboardNavigation: ["Enter"],
+              keyboardNavigation: ["Ctrl", "Shift", "F"],
             }}
             onClick={toggleFullScreen}
           >

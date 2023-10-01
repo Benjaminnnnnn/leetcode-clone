@@ -2,6 +2,7 @@
 import Split from "react-split";
 import Playground from "./Playground/Playground";
 import ProblemDescription from "./ProblemDescription/ProblemDescription";
+import ProblemTestCase from "./ProblemTestCase/ProblemTestCase";
 
 type Props = {};
 
@@ -12,10 +13,16 @@ const Workspace = (props: Props) => {
       minSize={0}
     >
       <ProblemDescription></ProblemDescription>
-      <Playground></Playground>
-      {/* <Split className="split" direction="vertical">
+
+      <Split
+        className="split"
+        direction="vertical"
+        sizes={[70, 30]}
+        minSize={60}
+      >
+        <Playground></Playground>
         <ProblemTestCase></ProblemTestCase>
-      </Split> */}
+      </Split>
     </Split>
   );
 };

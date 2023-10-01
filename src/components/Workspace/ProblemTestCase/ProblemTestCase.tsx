@@ -1,7 +1,7 @@
 type Props = {};
 
 const ProblemTestCase = (props: Props) => {
-  return <div>ProblemTestCase</div>;
+  return <div className="w-full">ProblemTestCase</div>;
 };
 
 export default ProblemTestCase;

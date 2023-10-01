@@ -25,7 +25,7 @@ const Timer = (props: Props) => {
   };
 
   const handleKeyToggleTimer = (e: KeyboardEvent) => {
-    if (e.shiftKey && e.key === "T") {
+    if (e.ctrlKey && e.shiftKey && e.key === "T") {
       toggleTimer();
     }
   };
@@ -52,7 +52,7 @@ const Timer = (props: Props) => {
       <ButtonWithTooltip
         tooltip={{
           text: "Toggle timer",
-          keyboardNavigation: ["Shift", "T"],
+          keyboardNavigation: ["Ctrl", "Shift", "T"],
           options: {
             position: "loose",
           },
