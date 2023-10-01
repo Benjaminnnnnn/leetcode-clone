@@ -32,7 +32,7 @@ const examples = [
 ];
 
 const ProblemDescription = (props: Props) => {
-  console.log(statement);
+  // console.log(statement);
   return (
     <>
       <div className="overflow-y-auto">

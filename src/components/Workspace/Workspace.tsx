@@ -13,12 +13,11 @@ const Workspace = (props: Props) => {
       minSize={0}
     >
       <ProblemDescription></ProblemDescription>
-
       <Split
         className="split"
         direction="vertical"
-        sizes={[70, 30]}
-        minSize={60}
+        sizes={[60, 40]}
+        minSize={100}
       >
         <Playground></Playground>
         <ProblemTestCase></ProblemTestCase>
