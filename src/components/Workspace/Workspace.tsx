@@ -14,15 +14,17 @@ const Workspace = ({ problem }: Props) => {
     <Split
       className="split bg-dark-layer-2 flex flex-1 overflow-y-auto"
       minSize={0}
+      snapOffset={200}
     >
       <ProblemDescription problem={problem}></ProblemDescription>
       <Split
-        className="split flex-1"
+        className="split relative flex-1"
         direction="vertical"
         sizes={[60, 40]}
-        minSize={60}
+        minSize={0}
+        snapOffset={100}
       >
-        <Playground></Playground>
+        <Playground problem={problem}></Playground>
         <ProblemTestCase></ProblemTestCase>
       </Split>
     </Split>

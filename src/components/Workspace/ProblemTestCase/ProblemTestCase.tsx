@@ -1,4 +1,3 @@
-import EditorFooter from "../Playground/EditorFooter/EditorFooter";
 import TestCase from "./TestCase/TestCase";
 
 type Props = {};
@@ -18,7 +17,6 @@ const ProblemTestCase = (props: Props) => {
         </div>
         <TestCase></TestCase>
       </div>
-      <EditorFooter></EditorFooter>
     </div>
   );
 };

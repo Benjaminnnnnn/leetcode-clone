@@ -1,18 +1,29 @@
 import Spinner from "@/components/Loader/Spinner";
 import { useEditorTheme } from "@/hooks/useEditorTheme";
+import { Problem } from "@/utils/types/problem";
 import Editor from "@monaco-editor/react";
+import { useState } from "react";
+import EditorFooter from "./EditorFooter/EditorFooter";
 import PreferenceNav from "./PreferenceNav/PreferenceNav";
 
-type Props = {};
+type Props = {
+  problem: Problem;
+};
 
 interface ISettings {
   fontSize: string;
   settingModalIsOpen: boolean;
   dropdownIsOpen: boolean;
 }
-const Playground = (props: Props) => {
+
+const Playground = ({ problem }: Props) => {
   const setTheme = useEditorTheme("dark");
-  const boilderPlate = `function twoSum(nums, target) { \n\t// Write your code here \n}`;
+  const [userCode, setUserCode] = useState(problem.starterCode);
+  const [settings, setSettings] = useState<ISettings>({
+    fontSize: "16px",
+    settingModalIsOpen: false,
+    dropdownIsOpen: false,
+  });
 
   return (
     <div className="overflow-y-auto">
@@ -20,9 +31,9 @@ const Playground = (props: Props) => {
       <Editor
         loading={<Spinner width="w-16"></Spinner>}
         language="javascript"
-        value={boilderPlate}
+        value={userCode}
         options={{
-          fontSize: 16,
+          fontSize: settings.fontSize,
           inlineSuggest: {
             enabled: true,
           },
@@ -36,6 +47,7 @@ const Playground = (props: Props) => {
         }}
         onMount={setTheme}
       />
+      <EditorFooter></EditorFooter>
     </div>
   );
 };
