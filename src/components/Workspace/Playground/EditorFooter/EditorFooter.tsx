@@ -1,4 +1,7 @@
-import { SlArrowUp } from "react-icons/sl";
+import {
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md";
 
 type Props = {};
 
@@ -9,10 +12,16 @@ const EditorFooter = (props: Props) => {
   return (
     <div className="bg-dark-layer-2 absolute bottom-0 z-10 mx-auto flex w-full shrink-0 flex-nowrap items-center justify-between gap-2 overflow-x-auto p-2 text-white">
       <button
-        className={`${buttonStyles} flex items-center gap-1 bg-white/10 hover:bg-stone-500`}
+        className={`${buttonStyles} flex items-center gap-0.5 bg-white/10 hover:bg-stone-500`}
       >
         Console
-        <SlArrowUp></SlArrowUp>
+        <span className="text-lg">
+          {true ? (
+            <MdOutlineKeyboardArrowUp></MdOutlineKeyboardArrowUp>
+          ) : (
+            <MdOutlineKeyboardArrowDown></MdOutlineKeyboardArrowDown>
+          )}
+        </span>
       </button>
       <div className="flex items-center gap-2">
         <button className={`${buttonStyles} bg-white/10 hover:bg-stone-500`}>
