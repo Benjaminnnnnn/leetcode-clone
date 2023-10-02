@@ -30,7 +30,7 @@ const TestCaseTab = ({ numTestCases }: TestCaseTabProps) => {
 
 const TestCase = () => {
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="shrink-1">
       <TestCaseTab numTestCases={3}></TestCaseTab>
       <pre className="mt-2 flex flex-col gap-2 pb-4 font-semibold">
         <TestConsole
