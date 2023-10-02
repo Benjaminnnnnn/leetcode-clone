@@ -20,7 +20,10 @@ const TestCaseTab = ({ numTestCases }: TestCaseTabProps) => {
   return (
     <div className="mt-2 flex items-center gap-4 text-white">
       {Array.from(new Array(numTestCases)).map((_, index) => (
-        <p className="bg-dark-layer-3 relative inline-flex cursor-pointer items-center whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition-all hover:bg-stone-500">
+        <p
+          key={index}
+          className="bg-dark-layer-3 relative inline-flex cursor-pointer items-center whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition-all hover:bg-stone-500"
+        >
           Case {index + 1}
         </p>
       ))}

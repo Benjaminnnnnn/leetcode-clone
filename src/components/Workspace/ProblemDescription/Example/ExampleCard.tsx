@@ -15,12 +15,18 @@ const ExampleCard = ({
 }: Props) => {
   return (
     <div>
-      <p className="font-medium text-white">Example {index + 1}:</p>
+      <p className="whitespace-nowrap font-medium text-white">
+        Example {index + 1}:
+      </p>
       {img && (
-        <img src={img} alt={`example ${index + 1}`} className="h-full w-full" />
+        <img
+          src={img}
+          alt={`example ${index + 1}`}
+          className="mx-auto h-full w-full min-w-[20rem] max-w-lg"
+        />
       )}
-      <div className="example-card">
-        <pre>
+      <div className="example-card overflow-x-auto">
+        <pre className="w-max min-w-full">
           <p>
             <strong>Input: </strong>
             {inputText}

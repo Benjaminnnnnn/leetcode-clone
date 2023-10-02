@@ -1,20 +1,23 @@
 "use client";
+import { Problem } from "@/utils/types/problem";
 import Split from "react-split";
 import Playground from "./Playground/Playground";
 import ProblemDescription from "./ProblemDescription/ProblemDescription";
 import ProblemTestCase from "./ProblemTestCase/ProblemTestCase";
 
-type Props = {};
+type Props = {
+  problem: Problem;
+};
 
-const Workspace = (props: Props) => {
+const Workspace = ({ problem }: Props) => {
   return (
     <Split
       className="split bg-dark-layer-2 flex flex-1 overflow-y-auto"
       minSize={0}
     >
-      <ProblemDescription></ProblemDescription>
+      <ProblemDescription problem={problem}></ProblemDescription>
       <Split
-        className="split"
+        className="split flex-1"
         direction="vertical"
         sizes={[60, 40]}
         minSize={60}

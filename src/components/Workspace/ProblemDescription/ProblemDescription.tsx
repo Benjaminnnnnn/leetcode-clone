@@ -1,11 +1,12 @@
 // import * as DOMPurify from "dompurify";
+import { Problem } from "@/utils/types/problem";
 import DOMPurify from "isomorphic-dompurify";
 import { AiFillDislike, AiFillLike, AiFillStar } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
 import ExampleCard from "./Example/ExampleCard";
 
 type Props = {
-  // problem?;
+  problem: Problem;
 };
 
 const statement =
@@ -23,7 +24,7 @@ const examples = [
     explanation: "Because nums[0] + nums[1] == 9, return [0, 1].",
   },
   {
-    id: 1,
+    id: 2,
     img: "https://miro.medium.com/v2/resize:fit:1400/1*f-jZ1s8rMW8t77TwQM0kRA.png",
     inputText: "nums=[4,2,11,7], target=[9]",
     outputText: "[1,3]",
@@ -31,7 +32,7 @@ const examples = [
   },
 ];
 
-const ProblemDescription = (props: Props) => {
+const ProblemDescription = ({ problem }: Props) => {
   // console.log(statement);
   return (
     <>
@@ -43,12 +44,12 @@ const ProblemDescription = (props: Props) => {
           </p>
         </div>
 
-        <div className="flex px-0 py-4">
-          <div className="space-y-3 px-4">
+        <div className="flex w-full px-0 py-4">
+          <div className="w-full space-y-3 px-4">
             {/* Problem heading */}
             <div className="flex">
               <div className="mr-2 flex-1 whitespace-nowrap text-lg font-medium text-white">
-                1. Problem Title
+                {problem.title}
               </div>
             </div>
 
@@ -91,7 +92,7 @@ const ProblemDescription = (props: Props) => {
               <div
                 className="space-y-2"
                 dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(statement, {
+                  __html: DOMPurify.sanitize(problem.problemStatement, {
                     ALLOWED_ATTR: ["className"],
                   }),
                 }}
@@ -100,7 +101,7 @@ const ProblemDescription = (props: Props) => {
 
             {/* Examples */}
             <div>
-              {examples.map((example, index) => (
+              {problem.examples.map((example, index) => (
                 <ExampleCard
                   key={example.id}
                   index={index}
@@ -114,9 +115,9 @@ const ProblemDescription = (props: Props) => {
               <p className="text-sm font-medium text-white">Constraints:</p>
               <ul className="ml-5 list-disc text-white">
                 <div
-                  className="space-y-1"
+                  className="min-w-min space-y-1"
                   dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(constraints, {
+                    __html: DOMPurify.sanitize(problem.constraints, {
                       ALLOWED_ATTR: ["className"],
                     }),
                   }}

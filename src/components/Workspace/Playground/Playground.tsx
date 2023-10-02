@@ -12,6 +12,7 @@ interface ISettings {
 }
 const Playground = (props: Props) => {
   const setTheme = useEditorTheme("dark");
+  const boilderPlate = `function twoSum(nums, target) { \n\t// Write your code here \n}`;
 
   return (
     <div className="overflow-y-auto">
@@ -19,7 +20,7 @@ const Playground = (props: Props) => {
       <Editor
         loading={<Spinner width="w-16"></Spinner>}
         language="javascript"
-        defaultValue="// Write your solution here"
+        value={boilderPlate}
         options={{
           fontSize: 16,
           inlineSuggest: {

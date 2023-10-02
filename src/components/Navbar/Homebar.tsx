@@ -18,29 +18,29 @@ import Timer from "../Timer/Timer";
 import Logout from "./Logout";
 
 type Props = {
-  problem?: string;
+  problemId?: string;
 };
 
 /**
  * This file is a temporary solution to react-redux bug. When used in conjunction
  * with the app router of Next.js, the root route / cannot access redux store.
  */
-const Homebar = ({ problem }: Props) => {
+const Homebar = ({ problemId }: Props) => {
   const [user, loading, error] = useAuthState(auth);
   const dispatch = useDispatch();
   const router = useRouter();
   const [problemIndex, setProblemIndex] = useState(
-    problems.findIndex((p) => p.id === problem),
+    problems.findIndex((p) => p.id === problemId),
   );
 
   const handlePreviousProblem = () => {
-    if (problem && problemIndex > 0) {
+    if (problemId && problemIndex > 0) {
       setProblemIndex((prevIndex) => prevIndex - 1);
     }
   };
 
   const handleNextProblem = () => {
-    if (problem && problemIndex < problems.length - 1) {
+    if (problemId && problemIndex < problems.length - 1) {
       setProblemIndex((prevIndex) => prevIndex + 1);
     }
   };
@@ -63,15 +63,14 @@ const Homebar = ({ problem }: Props) => {
   };
 
   useEffect(() => {
-    if (problem) {
+    if (problemId) {
       window.addEventListener("keydown", handleKeyPress);
       return () => window.removeEventListener("keydown", handleKeyPress);
     }
   }, []);
 
   useEffect(() => {
-    if (problem) {
-      console.log("go to ", problemIndex);
+    if (problemId) {
       router.push(`/problems/${problems[problemIndex].id}`);
     }
   }, [problemIndex, router]);
@@ -80,7 +79,7 @@ const Homebar = ({ problem }: Props) => {
     <div className="w-full border-gray-300 bg-stone-500">
       <div
         className={`mx-auto flex ${
-          !problem &&
+          !problemId &&
           "max-w-screen-2xl sm:px-12 sm:text-base md:px-24 2xl:px-12"
         } items-center justify-between px-4 py-2 text-sm font-medium text-white`}
       >
@@ -93,7 +92,7 @@ const Homebar = ({ problem }: Props) => {
           <span className="hidden sm:block">LeetCode</span>
         </Link>
 
-        {problem && (
+        {problemId && (
           <div className="hidden items-center justify-center gap-1 sm:flex">
             <ButtonWithTooltip
               tooltip={{
@@ -145,8 +144,8 @@ const Homebar = ({ problem }: Props) => {
                 </button>
               </Link>
             ) : (
-              <div className="flex cursor-pointer items-center gap-1 text-xl sm:gap-2 sm:text-3xl">
-                {problem && <Timer></Timer>}
+              <div className="flex cursor-pointer items-center gap-1 text-xl sm:gap-2 sm:text-2xl">
+                {problemId && <Timer></Timer>}
                 <ButtonWithTooltip
                   tooltip={{
                     text: user.email as string,
