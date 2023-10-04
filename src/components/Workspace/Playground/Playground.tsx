@@ -11,7 +11,7 @@ type Props = {
 };
 
 interface ISettings {
-  fontSize: string;
+  fontSize: number;
   settingModalIsOpen: boolean;
   dropdownIsOpen: boolean;
 }
@@ -20,7 +20,7 @@ const Playground = ({ problem }: Props) => {
   const setTheme = useEditorTheme("dark");
   const [userCode, setUserCode] = useState(problem.starterCode);
   const [settings, setSettings] = useState<ISettings>({
-    fontSize: "16px",
+    fontSize: 16,
     settingModalIsOpen: false,
     dropdownIsOpen: false,
   });

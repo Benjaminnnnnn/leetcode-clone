@@ -23,6 +23,9 @@ const Workspace = ({ problem }: Props) => {
         sizes={[60, 40]}
         minSize={0}
         snapOffset={100}
+        onDragEnd={(sizes) => {
+          console.log(sizes);
+        }}
       >
         <Playground problem={problem}></Playground>
         <ProblemTestCase></ProblemTestCase>

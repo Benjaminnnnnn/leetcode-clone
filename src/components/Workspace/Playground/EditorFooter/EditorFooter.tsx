@@ -1,11 +1,15 @@
+import { selectTestCaseIsExpanded } from "@/redux/features/workspace/workspaceSlice";
 import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 type Props = {};
 
 const EditorFooter = (props: Props) => {
+  const testCaseIsExpanded = useSelector(selectTestCaseIsExpanded);
+
   const buttonStyles =
     "px-4 py-1.5 font-medium items-center transition-all inline-flex rounded-lg text-sm";
 
@@ -16,7 +20,7 @@ const EditorFooter = (props: Props) => {
       >
         Console
         <span className="text-lg">
-          {true ? (
+          {testCaseIsExpanded ? (
             <MdOutlineKeyboardArrowUp></MdOutlineKeyboardArrowUp>
           ) : (
             <MdOutlineKeyboardArrowDown></MdOutlineKeyboardArrowDown>
