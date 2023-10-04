@@ -21,8 +21,9 @@ const workspaceSlice = createSlice({
   name: "workspace",
   initialState,
   reducers: {
-    toggleTestcase(state) {
-      state.testCaseIsExpanded = !state.testCaseIsExpanded;
+    toggleTestCase(state, action) {
+      console.log(action);
+      state.testCaseIsExpanded = action.payload.testCaseIsExpanded;
     },
   },
 });
@@ -30,5 +31,5 @@ const workspaceSlice = createSlice({
 export const selectTestCaseIsExpanded = (state: RootState) =>
   state.workspace.testCaseIsExpanded;
 
-export const { toggleTestcase } = workspaceSlice.actions;
+export const { toggleTestCase } = workspaceSlice.actions;
 export default workspaceSlice.reducer;
