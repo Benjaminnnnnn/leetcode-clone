@@ -3,18 +3,10 @@ import { RootState } from "../../store";
 
 interface WorkspaceState {
   testCaseIsExpanded: boolean;
-  // testCaseConfig: {
-  //   isExpanded: boolean;
-  //   minSize: number;
-  // };
 }
 
 const initialState: WorkspaceState = {
   testCaseIsExpanded: true,
-  // testCaseConfig: {
-  //   isExpanded: false,
-  //   minSize: 100,
-  // },
 };
 
 const workspaceSlice = createSlice({
@@ -22,7 +14,6 @@ const workspaceSlice = createSlice({
   initialState,
   reducers: {
     toggleTestCase(state, action) {
-      console.log(action);
       state.testCaseIsExpanded = action.payload.testCaseIsExpanded;
     },
   },

@@ -32,9 +32,7 @@ const Workspace = ({ problem }: Props) => {
         minSize={0}
         snapOffset={100}
         onDragEnd={(sizes) => {
-          // since sizes is a percentage, use a percentage to determine if split is closed
           if ((sizes[1] * window.innerHeight) / 100 <= 100) {
-            console.log("close test case");
             dispatch(
               toggleTestCase({
                 testIsExpanded: false,
@@ -44,7 +42,7 @@ const Workspace = ({ problem }: Props) => {
         }}
       >
         <Playground problem={problem}></Playground>
-        <ProblemTestCase></ProblemTestCase>
+        <ProblemTestCase problem={problem}></ProblemTestCase>
       </Split>
     </Split>
   );

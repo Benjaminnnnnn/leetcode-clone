@@ -1,6 +1,7 @@
 import Homebar from "@/components/Navbar/Homebar";
 import Workspace from "@/components/Workspace/Workspace";
 import { problems } from "@/utils/problems";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: {
@@ -18,6 +19,10 @@ export async function generateStaticParams() {
 
 const ProblemDetail = ({ params: { id } }: Props) => {
   const problem = problems[id];
+  if (!problem) {
+    // return 404 if dynamic route is not generated with generateStaticParams
+    notFound();
+  }
   // solve serialization between client and server component
   problem.handlerFunction = problem.handlerFunction.toString();
 
@@ -29,7 +34,6 @@ const ProblemDetail = ({ params: { id } }: Props) => {
   );
 };
 
-// return 404 if dynamic route is not generated with generateStaticParams
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 export default ProblemDetail;
