@@ -30,7 +30,7 @@ export const problems: Problem[] = [
     difficulty: "Medium",
     category: "Dynamic Programming",
     order: 3,
-    videoId: "",
+    videoId: "C6AZyfj-Kyw",
   },
   {
     id: "valid-parentheses",

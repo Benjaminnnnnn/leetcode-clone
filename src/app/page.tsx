@@ -1,7 +1,47 @@
+"use client";
 import Homebar from "@/components/Navbar/Homebar";
 import ProblemsTableBody from "@/components/Table/ProblemsTableBody";
+import { firestore } from "@/firebase/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Home() {
+  const [inputs, setInputs] = useState({
+    id: "",
+    title: "",
+    difficulty: "",
+    category: "",
+    order: "",
+    videoId: "",
+    link: "",
+    likes: 0,
+    dislikes: 0,
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs({
+      ...inputs,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const newProblem = {
+      ...inputs,
+      order: parseInt(inputs.order),
+    };
+    await setDoc(doc(firestore, "problems", inputs.id), newProblem);
+    toast.success("Added a new problem", {
+      position: "top-center",
+      autoClose: 3000,
+      theme: "dark",
+      pauseOnFocusLoss: true,
+    });
+  };
+
   return (
     <>
       <main className="min-h-screen w-screen bg-neutral-700">
@@ -32,6 +72,56 @@ export default function Home() {
             <ProblemsTableBody></ProblemsTableBody>
           </table>
         </div>
+
+        {/* add problem form & temporary */}
+        <form
+          className="mx-auto flex max-w-sm flex-col gap-3 p-6"
+          onSubmit={handleSubmit}
+        >
+          <input
+            onChange={handleInputChange}
+            type="text"
+            placeholder="problem id"
+            name="id"
+          />
+          <input
+            onChange={handleInputChange}
+            type="text"
+            placeholder="title"
+            name="title"
+          />
+          <input
+            onChange={handleInputChange}
+            type="text"
+            placeholder="difficulty"
+            name="difficulty"
+          />
+          <input
+            onChange={handleInputChange}
+            type="text"
+            placeholder="category"
+            name="category"
+          />
+          <input
+            onChange={handleInputChange}
+            type="text"
+            placeholder="order"
+            name="order"
+          />
+          <input
+            onChange={handleInputChange}
+            type="text"
+            placeholder="videoId (optional)"
+            name="videoId"
+          />
+          <input
+            onChange={handleInputChange}
+            type="text"
+            placeholder="link (optional)"
+            name="link"
+          />
+          <button className="bg-white">Add a problem</button>
+        </form>
       </main>
     </>
   );
