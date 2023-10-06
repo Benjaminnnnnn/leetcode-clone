@@ -1,5 +1,7 @@
 "use client";
-import { problems } from "@/mock-data/problems";
+import { firestore } from "@/firebase/firebase";
+import { Problem, problems } from "@/mock-data/problems";
+import { getDocs, collection, DocumentData } from "firebase/firestore";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
@@ -7,9 +9,11 @@ import { IoMdClose } from "react-icons/io";
 import { RiFileVideoLine } from "react-icons/ri";
 import YouTube from "react-youtube";
 
-type Props = {};
+type Props = {
+  problems: Problem[];
+};
 
-const ProblemsTableBody = (props: Props) => {
+const ProblemsTableBody = ({ problems }: Props) => {
   const [video, setVideo] = useState({
     isOpen: false,
     videoId: "",
@@ -104,7 +108,7 @@ const ProblemsTableBody = (props: Props) => {
           className="fixed inset-0 flex items-center justify-center bg-black/70"
           // onClick={closeVideo}
         >
-          <div className="hd:w-2/5 relative flex h-screen w-full flex-col justify-center gap-2 md:w-1/2">
+          <div className="relative flex h-screen w-full flex-col justify-center gap-2 md:w-1/2 hd:w-2/5">
             <IoMdClose
               className="h-8 w-8 cursor-pointer self-end text-white"
               onClick={closeVideo}

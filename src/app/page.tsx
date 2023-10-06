@@ -1,9 +1,12 @@
 "use client";
 import Homebar from "@/components/Navbar/Homebar";
+import ProblemsSkeleton from "@/components/Skeleton/ProblemsSkeleton";
 import ProblemsTableBody from "@/components/Table/ProblemsTableBody";
 import { firestore } from "@/firebase/firebase";
-import { doc, setDoc } from "firebase/firestore";
-import { useState } from "react";
+import { Problem } from "@/mock-data/problems";
+import { sleep } from "@/utils/sleep";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Home() {
@@ -18,6 +21,8 @@ export default function Home() {
     likes: 0,
     dislikes: 0,
   });
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const [loadingProblems, setLoadingProblems] = useState(true);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs({
@@ -42,35 +47,64 @@ export default function Home() {
     });
   };
 
+  useEffect(() => {
+    const fetchProbelms = async () => {
+      setLoadingProblems(true);
+      await sleep(10000);
+      const problemDocs = await getDocs(collection(firestore, "problems"));
+      const data: any[] = [];
+      problemDocs.forEach((problemDoc) => {
+        data.push(problemDoc.data());
+      });
+      data.sort((a, b) => {
+        if (a.order < b.order) {
+          return -1;
+        } else if (a.order === b.order) {
+          return 0;
+        } else {
+          return 1;
+        }
+      });
+      setProblems(data);
+      // setLoadingProblems(false);
+    };
+
+    fetchProbelms();
+  }, []);
+
   return (
     <>
       <main className="min-h-screen w-screen bg-neutral-700">
         <Homebar></Homebar>
 
         <div className="relative mx-auto flex max-w-screen-2xl overflow-x-auto py-4 sm:px-6 sm:py-10">
-          <table className="mx-auto w-full text-left text-sm sm:w-4/5">
-            <thead className="text-xs font-medium uppercase text-gray-400">
-              <tr>
-                <th scope="col" className="px-4 py-3">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Title
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Category
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Difficulty
-                </th>
-                <th scope="col" className="px-4 py-3">
-                  Solution
-                </th>
-              </tr>
-            </thead>
+          {loadingProblems ? (
+            <ProblemsSkeleton></ProblemsSkeleton>
+          ) : (
+            <table className="mx-auto w-full text-left text-sm sm:w-4/5">
+              <thead className="text-xs font-medium uppercase text-gray-400">
+                <tr>
+                  <th scope="col" className="px-4 py-3">
+                    Status
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Title
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Category
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Difficulty
+                  </th>
+                  <th scope="col" className="px-4 py-3">
+                    Solution
+                  </th>
+                </tr>
+              </thead>
 
-            <ProblemsTableBody></ProblemsTableBody>
-          </table>
+              <ProblemsTableBody problems={problems}></ProblemsTableBody>
+            </table>
+          )}
         </div>
 
         {/* add problem form & temporary */}
