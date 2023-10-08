@@ -44,19 +44,19 @@ const Auth = () => {
     };
   }, [isOpen]);
 
-  if (user && !loading) {
-    return (
-      <>
-        <p className="px-4 py-2">User already signed in. Redirecting...</p>
-      </>
-    );
-  }
+  // if (user && !loading) {
+  //   return (
+  //     <>
+  //       <p className="px-4 py-2">User already signed in. Redirecting...</p>
+  //     </>
+  //   );
+  // }
 
   return (
     <>
-      <div className="qhd:block fixed inset-0 -z-10 hidden bg-stone-100"></div>
+      <div className="fixed inset-0 -z-10 hidden bg-stone-100 qhd:block"></div>
       <div className={`bg-neutral-700} w-screen`}>
-        <div className="max-w-screen-qhd mx-auto flex min-h-screen flex-col">
+        <div className="mx-auto flex min-h-screen max-w-screen-qhd flex-col">
           <Navbar></Navbar>
           <div className="mx-auto grid w-full flex-1 grid-rows-3 sm:grid-flow-dense sm:grid-cols-2 sm:grid-rows-2">
             <div className="pointer-events-none hidden select-none items-center justify-center bg-neutral-700 sm:flex">

@@ -41,6 +41,7 @@ const Playground = ({ problem }: Props) => {
             side: "right",
             scale: 5,
             maxColumn: 100,
+            size: "fill",
           },
           formatOnPaste: true,
           formatOnType: true,

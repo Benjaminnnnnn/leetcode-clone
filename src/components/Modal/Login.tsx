@@ -8,6 +8,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
 import { auth } from "@/firebase/firebase";
+import { toastConfig } from "@/utils/react-toastify/toast";
 import { useRouter } from "next/navigation";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
@@ -43,20 +44,10 @@ const Login = (props: Props) => {
         router.push("/");
         dispatch(authModalClose());
       } else {
-        toast.error("Unable to log in.", {
-          position: "top-center",
-          autoClose: 3000,
-          theme: "dark",
-          pauseOnFocusLoss: true,
-        });
+        toast.error("Unable to log in.", toastConfig);
       }
     } catch (error) {
-      toast.error(error as string, {
-        position: "top-center",
-        autoClose: 3000,
-        theme: "dark",
-        pauseOnFocusLoss: true,
-      });
+      toast.error(error as string, toastConfig);
     }
   };
 

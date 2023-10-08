@@ -1,45 +1,52 @@
 // import * as DOMPurify from "dompurify";
-import { Problem } from "@/utils/types/problem";
+import ProblemDescriptionTabSkeleton from "@/components/Skeleton/ProblemDescriptionTabSkeleton";
+import { auth, firestore } from "@/firebase/firebase";
+import { toastConfig } from "@/utils/react-toastify/toast";
+import { DBProblem, Problem } from "@/utils/types/problem";
+import { DBUser } from "@/utils/types/users";
+import { doc, getDoc } from "firebase/firestore";
 import DOMPurify from "isomorphic-dompurify";
+import { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { AiFillDislike, AiFillLike, AiFillStar } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
+import { toast } from "react-toastify";
 import ExampleCard from "./Example/ExampleCard";
 
 type Props = {
   problem: Problem;
 };
 
-const statement =
-  "<p className='mt-3'>Given an array of integers <code>nums</code> and an integer <code>target</code>, return <em>indices of the two numbers such that they add up to</em> <code>target</code>.</p><p className='mt-3'>You may assume that each input would have <strong>exactly one solution</strong>, and youmay not use thesame element twice.</p><p className='mt-3'>You can return the answer in any order.</p>";
-
-const constraints =
-  "<li className='mt-2'><code>2 ≤ nums.length ≤ 10<sup>4</sup></code></li><li className='mt-2'><code>-10<sup>4</sup> ≤ nums[i] ≤ 10<sup>4</sup></code></li><li className='mt-2'><code>-10<sup>4</sup> ≤ target ≤ 10<sup>4</sup></code></li><li className='mt-2 text-sm'><strong>Only one valid answer exists.</strong></li>";
-
-const examples = [
-  {
-    id: 1,
-    img: "",
-    inputText: "nums=[2,7,11,15], target=[9]",
-    outputText: "[0,1]",
-    explanation: "Because nums[0] + nums[1] == 9, return [0, 1].",
-  },
-  {
-    id: 2,
-    img: "https://miro.medium.com/v2/resize:fit:1400/1*f-jZ1s8rMW8t77TwQM0kRA.png",
-    inputText: "nums=[4,2,11,7], target=[9]",
-    outputText: "[1,3]",
-    explanation: "Because nums[1] + nums[3] == 9, return [1, 3].",
-  },
-];
-
 const ProblemDescription = ({ problem }: Props) => {
-  // console.log(statement);
+  const [user] = useAuthState(auth);
+  const { liked, starred, solved, disliked, setData } = useGetUserDataOnProblem(
+    problem.id,
+  );
+  const [currentProblem, loading, difficultyClass] = useGetCurrentProblem(
+    problem.id,
+  );
+  const [updating, setUpdating] = useState(false);
+
+  const handleLike = async () => {
+    if (!user) {
+      toast.error("You must be logged in to like a problem.", toastConfig);
+      return;
+    }
+    if (updating) {
+      return;
+    }
+
+    setUpdating(true);
+    // update user data and problem
+    setUpdating(false);
+  };
+
   return (
     <>
       <div className="overflow-y-auto">
         {/* TAB */}
-        <div className="bg-dark-layer-1 flex h-11 w-full items-end text-white">
-          <p className="bg-dark-layer-2 cursor-pointer rounded-t px-4 py-2 text-xs">
+        <div className="flex h-11 w-full items-end bg-dark-layer-1 text-white">
+          <p className="cursor-pointer rounded-t bg-dark-layer-2 px-4 py-2 text-xs">
             Description
           </p>
         </div>
@@ -54,38 +61,54 @@ const ProblemDescription = ({ problem }: Props) => {
             </div>
 
             {/* Difficulty Tab */}
-            <div className="flex items-center">
-              <div
-                className={`${"bg-teal-500 text-teal-300"} inline-block rounded-xl bg-opacity-[0.15] px-2.5 py-1 text-xs font-medium capitalize`}
-              >
-                Easy
+            {!loading && currentProblem ? (
+              <div className="flex items-center gap-4">
+                <div
+                  className={`${difficultyClass} inline-block rounded-xl bg-opacity-[0.15] px-2.5 py-1 text-xs font-medium capitalize`}
+                >
+                  {currentProblem.difficulty}
+                </div>
+                {solved && (
+                  <div className="cursor-pointer rounded p-2 text-lg text-teal-600 transition-colors duration-200 hover:text-teal-300">
+                    <BsCheck2Circle />
+                  </div>
+                )}
+                <div
+                  className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                  onClick={handleLike}
+                >
+                  <AiFillLike
+                    className={`${
+                      liked && "text-blue-500"
+                    } group-hover:text-blue-500`}
+                  />
+                  {/* {true && <Spinner></Spinner>} */}
+                  <p className="text-xs">{currentProblem.likes}</p>
+                </div>
+                <div
+                  className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                  // onClick={handleLike}
+                >
+                  <AiFillDislike
+                    className={`${
+                      disliked && "text-blue-500"
+                    } group-hover:text-blue-500`}
+                  />
+                  {/* {true && <Spinner></Spinner>} */}
+                  <p className="text-xs">{currentProblem.dislikes}</p>
+                </div>
+                <div
+                  className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                  // onClick={handleLike}
+                >
+                  <AiFillStar className={`${starred && "text-yellow-500"}`} />
+                </div>
               </div>
-              <div className="ml-4 cursor-pointer rounded p-2 text-lg text-teal-600 transition-colors duration-200 hover:text-teal-300">
-                <BsCheck2Circle />
-              </div>
-              <div
-                className="group ml-4 flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
-                // onClick={handleLike}
-              >
-                <AiFillLike className="group-hover:text-blue-500" />
-                {/* {true && <Spinner></Spinner>} */}
-                <p className="text-xs">2</p>
-              </div>
-              <div
-                className="group ml-4 flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
-                // onClick={handleLike}
-              >
-                <AiFillDislike className="group-hover:text-blue-500" />
-                {/* {true && <Spinner></Spinner>} */}
-                <p className="text-xs">2</p>
-              </div>
-              <div
-                className="group ml-4 flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
-                // onClick={handleLike}
-              >
-                <AiFillStar className="group-active:text-yellow-500" />
-              </div>
-            </div>
+            ) : (
+              <ProblemDescriptionTabSkeleton
+                solved={solved}
+              ></ProblemDescriptionTabSkeleton>
+            )}
 
             {/* problem statement */}
             <div className="problem-statement text-sm text-white">
@@ -132,3 +155,83 @@ const ProblemDescription = ({ problem }: Props) => {
 };
 
 export default ProblemDescription;
+
+function useGetCurrentProblem(
+  problemId: string,
+): [DBProblem | undefined, boolean, string] {
+  const [currentProblem, setCurrentProblem] = useState<DBProblem>();
+  const [loading, setLoading] = useState(false);
+  const [difficultyClass, setDifficultyClass] = useState("");
+
+  useEffect(() => {
+    const fetchProblem = async () => {
+      setLoading(true);
+      const problemRef = doc(firestore, "problems", problemId);
+      const problemDoc = await getDoc(problemRef);
+      if (problemDoc.exists()) {
+        const problem = {
+          id: problemDoc.id,
+          ...problemDoc.data(),
+        } as DBProblem;
+        const difficulty = problem.difficulty.toLowerCase();
+
+        setCurrentProblem(problem);
+        setDifficultyClass(
+          difficulty === "easy"
+            ? "text-teal-300 bg-teal-500"
+            : difficulty === "medium"
+            ? "text-yellow-500 bg-yellow-500"
+            : "text-red-500 bg-red-500",
+        );
+        setLoading(false);
+      } else {
+        // shouldn't reach here
+        console.log("No such problem id");
+      }
+    };
+    fetchProblem();
+  }, [problemId]);
+
+  return [currentProblem, loading, difficultyClass];
+}
+
+function useGetUserDataOnProblem(problemId: string) {
+  const [user] = useAuthState(auth);
+  const initialData = {
+    liked: false,
+    disliked: false,
+    starred: false,
+    solved: false,
+  };
+  const [data, setData] = useState(initialData);
+
+  useEffect(() => {
+    const fetchUserDataOnProblem = async () => {
+      const userRef = doc(firestore, "users", user!.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (userDoc.exists()) {
+        const {
+          solvedProblems,
+          likedProblems,
+          dislikedProblems,
+          starredProblems,
+        } = userDoc.data() as DBUser;
+
+        setData({
+          liked: likedProblems.includes(problemId),
+          disliked: dislikedProblems.includes(problemId),
+          starred: starredProblems.includes(problemId),
+          solved: solvedProblems.includes(problemId),
+        });
+      }
+    };
+    if (user) {
+      fetchUserDataOnProblem();
+    }
+    return () => setData(initialData);
+  }, [problemId, user]);
+
+  return { ...data, setData };
+  // return { ...initialData, setData };
+}

@@ -1,5 +1,6 @@
 import { auth } from "@/firebase/firebase";
 import { emailRegex } from "@/utils/formValidation";
+import { toastConfig } from "@/utils/react-toastify/toast";
 import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -28,20 +29,10 @@ const ResetPassword = (props: Props) => {
     try {
       const success = await sendPasswordResetEmail(data.email);
       if (success) {
-        toast.success("Reset password email sent!", {
-          position: "top-center",
-          autoClose: 3000,
-          theme: "dark",
-          pauseOnFocusLoss: true,
-        });
+        toast.success("Reset password email sent!", toastConfig);
       }
     } catch (error) {
-      toast.error("Failed to send reset password email.", {
-        position: "top-center",
-        autoClose: 3000,
-        theme: "dark",
-        pauseOnFocusLoss: true,
-      });
+      toast.error("Failed to send reset password email.", toastConfig);
     }
   };
 

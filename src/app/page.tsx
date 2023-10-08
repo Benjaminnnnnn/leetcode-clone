@@ -3,10 +3,10 @@ import Homebar from "@/components/Navbar/Homebar";
 import ProblemsSkeleton from "@/components/Skeleton/ProblemsSkeleton";
 import ProblemsTableBody from "@/components/Table/ProblemsTableBody";
 import { firestore } from "@/firebase/firebase";
-import { Problem } from "@/mock-data/problems";
-import { sleep } from "@/utils/sleep";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useGetProblems } from "@/hooks/useGetProblems";
+import { toastConfig } from "@/utils/react-toastify/toast";
+import { doc, setDoc } from "firebase/firestore";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Home() {
@@ -15,14 +15,15 @@ export default function Home() {
     title: "",
     difficulty: "",
     category: "",
-    order: "",
+    order: 0,
     videoId: "",
     link: "",
     likes: 0,
     dislikes: 0,
   });
-  const [problems, setProblems] = useState<Problem[]>([]);
   const [loadingProblems, setLoadingProblems] = useState(true);
+  // fetch all problems from firestore
+  const problems = useGetProblems(setLoadingProblems);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs({
@@ -36,41 +37,11 @@ export default function Home() {
 
     const newProblem = {
       ...inputs,
-      order: parseInt(inputs.order),
+      order: Number(inputs.order),
     };
     await setDoc(doc(firestore, "problems", inputs.id), newProblem);
-    toast.success("Added a new problem", {
-      position: "top-center",
-      autoClose: 3000,
-      theme: "dark",
-      pauseOnFocusLoss: true,
-    });
+    toast.success("Added a new problem", toastConfig);
   };
-
-  useEffect(() => {
-    const fetchProbelms = async () => {
-      setLoadingProblems(true);
-      await sleep(10000);
-      const problemDocs = await getDocs(collection(firestore, "problems"));
-      const data: any[] = [];
-      problemDocs.forEach((problemDoc) => {
-        data.push(problemDoc.data());
-      });
-      data.sort((a, b) => {
-        if (a.order < b.order) {
-          return -1;
-        } else if (a.order === b.order) {
-          return 0;
-        } else {
-          return 1;
-        }
-      });
-      setProblems(data);
-      // setLoadingProblems(false);
-    };
-
-    fetchProbelms();
-  }, []);
 
   return (
     <>

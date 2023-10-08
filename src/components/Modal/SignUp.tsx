@@ -1,6 +1,9 @@
-import { auth } from "@/firebase/firebase";
+import { auth, firestore } from "@/firebase/firebase";
 import { authModalClose, login } from "@/redux/features/auth/authSlice";
 import { emailRegex, passwordRegex } from "@/utils/formValidation";
+import { toastConfig } from "@/utils/react-toastify/toast";
+import { DBUser } from "@/utils/types/users";
+import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
@@ -36,28 +39,41 @@ const SignUp = (props: Props) => {
 
   const handleSignUp: SubmitHandler<FormState> = async (data) => {
     try {
+      // create new user with firebase authentication
       const newUser = await createUserWithEmailAndPassword(
         data.email,
         data.password,
       );
+
       if (newUser) {
+        toast.loading("Creating your account", {
+          ...toastConfig,
+          autoClose: false,
+          toastId: "loadingNotification",
+        });
+        // create new user in firestore
+        const userData: DBUser = {
+          id: newUser.user.uid,
+          name: data.name,
+          email: data.email,
+          likedProblems: [],
+          dislikedProblems: [],
+          starredProblems: [],
+          solvedProblems: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        await setDoc(doc(firestore, "users", newUser.user.uid), userData);
+
         router.push("/");
         dispatch(authModalClose());
       } else {
-        toast.error("User already exists!", {
-          position: "top-center",
-          autoClose: 3000,
-          theme: "dark",
-          pauseOnFocusLoss: true,
-        });
+        toast.error("Email already exists!", toastConfig);
       }
     } catch (error) {
-      toast.error(error as string, {
-        position: "top-center",
-        autoClose: 3000,
-        theme: "dark",
-        pauseOnFocusLoss: true,
-      });
+      toast.error(error as string, toastConfig);
+    } finally {
+      toast.dismiss("loadingNotification");
     }
   };
 

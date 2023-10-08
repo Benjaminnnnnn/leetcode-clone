@@ -1,7 +1,5 @@
 "use client";
-import { firestore } from "@/firebase/firebase";
-import { Problem, problems } from "@/mock-data/problems";
-import { getDocs, collection, DocumentData } from "firebase/firestore";
+import { Problem } from "@/mock-data/problems";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
@@ -49,7 +47,7 @@ const ProblemsTableBody = ({ problems }: Props) => {
     <>
       <tbody>
         {problems.map((problem, idx) => {
-          const difficulty = problem.difficulty.toLocaleLowerCase();
+          const difficulty = problem.difficulty.toLowerCase();
           const difficultyColor =
             difficulty === "easy"
               ? "text-teal-500"
