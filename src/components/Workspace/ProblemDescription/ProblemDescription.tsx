@@ -1,12 +1,13 @@
 // import * as DOMPurify from "dompurify";
+import Spinner from "@/components/Loader/Spinner";
 import ProblemDescriptionTabSkeleton from "@/components/Skeleton/ProblemDescriptionTabSkeleton";
 import { auth, firestore } from "@/firebase/firebase";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { DBProblem, Problem } from "@/utils/types/problem";
 import { DBUser } from "@/utils/types/users";
-import { doc, getDoc } from "firebase/firestore";
+import { Transaction, doc, getDoc, runTransaction } from "firebase/firestore";
 import DOMPurify from "isomorphic-dompurify";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { AiFillDislike, AiFillLike, AiFillStar } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
@@ -22,22 +23,76 @@ const ProblemDescription = ({ problem }: Props) => {
   const { liked, starred, solved, disliked, setData } = useGetUserDataOnProblem(
     problem.id,
   );
-  const [currentProblem, loading, difficultyClass] = useGetCurrentProblem(
-    problem.id,
-  );
+  const { currentProblem, loading, difficultyClass, setCurrentProblem } =
+    useGetCurrentProblem(problem.id);
   const [updating, setUpdating] = useState(false);
+
+  const returnUserDataAndProblemData = useCallback(
+    async (transaction: Transaction) => {
+      const userRef = doc(firestore, "users", user!.uid);
+      const problemRef = doc(firestore, "problems", problem.id);
+      const userDoc = await transaction.get(userRef);
+      const problemDoc = await transaction.get(problemRef);
+      return { userDoc, problemDoc, userRef, problemRef };
+    },
+    [user],
+  );
+
+  console.log(liked);
 
   const handleLike = async () => {
     if (!user) {
       toast.error("You must be logged in to like a problem.", toastConfig);
       return;
     }
+
     if (updating) {
       return;
     }
 
     setUpdating(true);
-    // update user data and problem
+    // update user data and problem data in both firestore and app state
+    await runTransaction(firestore, async (transcation) => {
+      console.log("starting transcation");
+      const { userRef, problemRef, userDoc, problemDoc } =
+        await returnUserDataAndProblemData(transcation);
+
+      if (userDoc.exists() && problemDoc.exists()) {
+        const userData = userDoc.data() as DBUser;
+        const problemData = problemDoc.data() as DBProblem;
+        if (liked) {
+          transcation.update(userRef, {
+            likedProblems: userData.likedProblems.filter(
+              (problemId) => problemId != problem.id,
+            ),
+          });
+          transcation.update(problemRef, {
+            likes: problemData.likes - 1,
+          });
+          setData((prevData) => ({ ...prevData, liked: false }));
+          setCurrentProblem((prevProblem) =>
+            prevProblem
+              ? { ...prevProblem, likes: prevProblem.likes - 1 }
+              : undefined,
+          );
+        } else {
+          transcation.update(userRef, {
+            likedProblems: [...userData.likedProblems, problem.id],
+          });
+          transcation.update(problemRef, {
+            likes: problemData.likes + 1,
+          });
+          setData((prevData) => ({ ...prevData, liked: true }));
+          setCurrentProblem((prevProblem) =>
+            prevProblem
+              ? { ...prevProblem, likes: prevProblem.likes + 1 }
+              : undefined,
+          );
+        }
+      }
+      console.log("ending transcation");
+    });
+
     setUpdating(false);
   };
 
@@ -82,8 +137,11 @@ const ProblemDescription = ({ problem }: Props) => {
                       liked && "text-blue-500"
                     } group-hover:text-blue-500`}
                   />
-                  {/* {true && <Spinner></Spinner>} */}
-                  <p className="text-xs">{currentProblem.likes}</p>
+                  {updating ? (
+                    <Spinner></Spinner>
+                  ) : (
+                    <p className="text-xs">{currentProblem.likes}</p>
+                  )}
                 </div>
                 <div
                   className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
@@ -156,9 +214,7 @@ const ProblemDescription = ({ problem }: Props) => {
 
 export default ProblemDescription;
 
-function useGetCurrentProblem(
-  problemId: string,
-): [DBProblem | undefined, boolean, string] {
+function useGetCurrentProblem(problemId: string) {
   const [currentProblem, setCurrentProblem] = useState<DBProblem>();
   const [loading, setLoading] = useState(false);
   const [difficultyClass, setDifficultyClass] = useState("");
@@ -192,7 +248,7 @@ function useGetCurrentProblem(
     fetchProblem();
   }, [problemId]);
 
-  return [currentProblem, loading, difficultyClass];
+  return { currentProblem, loading, difficultyClass, setCurrentProblem };
 }
 
 function useGetUserDataOnProblem(problemId: string) {

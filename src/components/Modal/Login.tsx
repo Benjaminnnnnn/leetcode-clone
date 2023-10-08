@@ -41,6 +41,7 @@ const Login = (props: Props) => {
         data.password,
       );
       if (loggedUser) {
+        // toast.success("Logged in successfully. Redirecting...", toastConfig);
         router.push("/");
         dispatch(authModalClose());
       } else {
