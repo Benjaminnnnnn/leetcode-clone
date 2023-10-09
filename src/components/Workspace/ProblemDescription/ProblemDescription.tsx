@@ -4,7 +4,7 @@ import ProblemDescriptionTabSkeleton from "@/components/Skeleton/ProblemDescript
 import { auth, firestore } from "@/firebase/firebase";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { DBProblem, Problem } from "@/utils/types/problem";
-import { DBUser } from "@/utils/types/users";
+import { DBUser, DBUser } from "@/utils/types/users";
 import { Transaction, doc, getDoc, runTransaction } from "firebase/firestore";
 import DOMPurify from "isomorphic-dompurify";
 import { useCallback, useEffect, useState } from "react";
@@ -20,9 +20,8 @@ type Props = {
 
 const ProblemDescription = ({ problem }: Props) => {
   const [user] = useAuthState(auth);
-  const { liked, starred, solved, disliked, setData } = useGetUserDataOnProblem(
-    problem.id,
-  );
+  const { liked, starred, solved, disliked, setUserData } =
+    useGetUserDataOnProblem(problem.id);
   const { currentProblem, loading, difficultyClass, setCurrentProblem } =
     useGetCurrentProblem(problem.id);
   const [updating, setUpdating] = useState(false);
@@ -38,8 +37,6 @@ const ProblemDescription = ({ problem }: Props) => {
     [user],
   );
 
-  console.log(liked);
-
   const handleLike = async () => {
     if (!user) {
       toast.error("You must be logged in to like a problem.", toastConfig);
@@ -53,11 +50,12 @@ const ProblemDescription = ({ problem }: Props) => {
     setUpdating(true);
     // update user data and problem data in both firestore and app state
     await runTransaction(firestore, async (transcation) => {
-      console.log("starting transcation");
+      console.log("starting like transcation");
       const { userRef, problemRef, userDoc, problemDoc } =
         await returnUserDataAndProblemData(transcation);
 
       if (userDoc.exists() && problemDoc.exists()) {
+        console.log("entered");
         const userData = userDoc.data() as DBUser;
         const problemData = problemDoc.data() as DBProblem;
         if (liked) {
@@ -65,24 +63,49 @@ const ProblemDescription = ({ problem }: Props) => {
             likedProblems: userData.likedProblems.filter(
               (problemId) => problemId != problem.id,
             ),
-          });
+          } satisfies Partial<DBUser>);
           transcation.update(problemRef, {
             likes: problemData.likes - 1,
-          });
-          setData((prevData) => ({ ...prevData, liked: false }));
+          } satisfies Partial<DBProblem>);
+          setUserData((prevUserData) => ({ ...prevUserData, liked: false }));
           setCurrentProblem((prevProblem) =>
             prevProblem
               ? { ...prevProblem, likes: prevProblem.likes - 1 }
               : undefined,
           );
+        } else if (disliked) {
+          transcation.update(userRef, {
+            likedProblems: [...userData.likedProblems, problem.id],
+            dislikedProblems: userData.dislikedProblems.filter(
+              (problemId) => problemId != problem.id,
+            ),
+          } satisfies Partial<DBUser>);
+          transcation.update(problemRef, {
+            likes: problemData.likes + 1,
+            dislikes: problemData.dislikes - 1,
+          } satisfies Partial<DBProblem>);
+          setUserData((prevUserData) => ({
+            ...prevUserData,
+            liked: true,
+            disliked: false,
+          }));
+          setCurrentProblem((prevProblem) =>
+            prevProblem
+              ? {
+                  ...prevProblem,
+                  likes: prevProblem.likes + 1,
+                  dislikes: prevProblem.dislikes - 1,
+                }
+              : undefined,
+          );
         } else {
           transcation.update(userRef, {
             likedProblems: [...userData.likedProblems, problem.id],
-          });
+          } satisfies Partial<DBUser>);
           transcation.update(problemRef, {
             likes: problemData.likes + 1,
-          });
-          setData((prevData) => ({ ...prevData, liked: true }));
+          } satisfies Partial<DBProblem>);
+          setUserData((prevUserData) => ({ ...prevUserData, liked: true }));
           setCurrentProblem((prevProblem) =>
             prevProblem
               ? { ...prevProblem, likes: prevProblem.likes + 1 }
@@ -90,11 +113,94 @@ const ProblemDescription = ({ problem }: Props) => {
           );
         }
       }
-      console.log("ending transcation");
+      console.log("ending like transcation");
     });
 
     setUpdating(false);
   };
+
+  const handleDislike = async () => {
+    if (!user) {
+      toast.error("You must be logged in to dislike a problem.", toastConfig);
+      return;
+    }
+
+    if (updating) {
+      return;
+    }
+
+    setUpdating(true);
+    // update user data and problem data in both firestore and app state
+    await runTransaction(firestore, async (transcation) => {
+      console.log("starting dislike transaction");
+      const { userRef, problemRef, userDoc, problemDoc } =
+        await returnUserDataAndProblemData(transcation);
+
+      if (userDoc.exists() && problemDoc.exists()) {
+        const userData = userDoc.data() as DBUser;
+        const problemData = problemDoc.data() as DBProblem;
+        if (disliked) {
+          transcation.update(userRef, {
+            dislikedProblems: userData.dislikedProblems.filter(
+              (problemId) => problemId != problem.id,
+            ),
+          } satisfies Partial<DBUser>);
+          transcation.update(problemRef, {
+            dislikes: problemData.dislikes - 1,
+          } satisfies Partial<DBProblem>);
+          setUserData((prevUserData) => ({ ...prevUserData, disliked: false }));
+          setCurrentProblem((prevProblem) =>
+            prevProblem
+              ? { ...prevProblem, dislikes: prevProblem.dislikes - 1 }
+              : undefined,
+          );
+        } else if (liked) {
+          transcation.update(userRef, {
+            likedProblems: userData.likedProblems.filter(
+              (problemId) => problemId != problem.id,
+            ),
+            dislikedProblems: [...userData.dislikedProblems, problem.id],
+          } satisfies Partial<DBUser>);
+          transcation.update(problemRef, {
+            likes: problemData.likes - 1,
+            dislikes: problemData.dislikes + 1,
+          } satisfies Partial<DBProblem>);
+          setUserData((prevUserData) => ({
+            ...prevUserData,
+            liked: false,
+            disliked: true,
+          }));
+          setCurrentProblem((prevProblem) =>
+            prevProblem
+              ? {
+                  ...prevProblem,
+                  likes: prevProblem.likes - 1,
+                  dislikes: prevProblem.dislikes + 1,
+                }
+              : undefined,
+          );
+        } else {
+          transcation.update(userRef, {
+            dislikedProblems: [...userData.dislikedProblems, problem.id],
+          } satisfies Partial<DBUser>);
+          transcation.update(problemRef, {
+            dislikes: problemData.dislikes + 1,
+          } satisfies Partial<DBProblem>);
+          setUserData((prevUserData) => ({ ...prevUserData, disliked: true }));
+          setCurrentProblem((prevProblem) =>
+            prevProblem
+              ? { ...prevProblem, dislikes: prevProblem.dislikes + 1 }
+              : undefined,
+          );
+        }
+      }
+      console.log("ending dislike transaction");
+    });
+    setUpdating(false);
+  };
+
+  console.log(currentProblem);
+  console.log(liked, disliked);
 
   return (
     <>
@@ -145,15 +251,18 @@ const ProblemDescription = ({ problem }: Props) => {
                 </div>
                 <div
                   className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
-                  // onClick={handleLike}
+                  onClick={handleDislike}
                 >
                   <AiFillDislike
                     className={`${
                       disliked && "text-blue-500"
                     } group-hover:text-blue-500`}
                   />
-                  {/* {true && <Spinner></Spinner>} */}
-                  <p className="text-xs">{currentProblem.dislikes}</p>
+                  {updating ? (
+                    <Spinner></Spinner>
+                  ) : (
+                    <p className="text-xs">{currentProblem.dislikes}</p>
+                  )}
                 </div>
                 <div
                   className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
@@ -259,7 +368,7 @@ function useGetUserDataOnProblem(problemId: string) {
     starred: false,
     solved: false,
   };
-  const [data, setData] = useState(initialData);
+  const [userData, setUserData] = useState(initialData);
 
   useEffect(() => {
     const fetchUserDataOnProblem = async () => {
@@ -274,7 +383,7 @@ function useGetUserDataOnProblem(problemId: string) {
           starredProblems,
         } = userDoc.data() as DBUser;
 
-        setData({
+        setUserData({
           liked: likedProblems.includes(problemId),
           disliked: dislikedProblems.includes(problemId),
           starred: starredProblems.includes(problemId),
@@ -285,9 +394,9 @@ function useGetUserDataOnProblem(problemId: string) {
     if (user) {
       fetchUserDataOnProblem();
     }
-    return () => setData(initialData);
+    return () => setUserData(initialData);
   }, [problemId, user]);
 
-  return { ...data, setData };
+  return { ...userData, setUserData };
   // return { ...initialData, setData };
 }
