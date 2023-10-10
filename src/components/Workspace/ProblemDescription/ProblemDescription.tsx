@@ -5,7 +5,15 @@ import { auth, firestore } from "@/firebase/firebase";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { DBProblem, Problem } from "@/utils/types/problem";
 import { DBUser } from "@/utils/types/users";
-import { Transaction, doc, getDoc, runTransaction } from "firebase/firestore";
+import {
+  Transaction,
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  runTransaction,
+  updateDoc,
+} from "firebase/firestore";
 import DOMPurify from "isomorphic-dompurify";
 import { useCallback, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -49,22 +57,22 @@ const ProblemDescription = ({ problem }: Props) => {
 
     setUpdating(true);
     // update user data and problem data in both firestore and app state
-    const newStates = await runTransaction(firestore, async (transcation) => {
-      console.log("starting like transcation");
+    const newStates = await runTransaction(firestore, async (transaction) => {
+      console.log("starting like transaction");
       const { userRef, problemRef, userDoc, problemDoc } =
-        await returnUserDataAndProblemData(transcation);
+        await returnUserDataAndProblemData(transaction);
 
       if (userDoc.exists() && problemDoc.exists()) {
         const userData = userDoc.data() as DBUser;
         const problemData = problemDoc.data() as DBProblem;
 
         if (liked) {
-          transcation.update(userRef, {
+          transaction.update(userRef, {
             likedProblems: userData.likedProblems.filter(
               (problemId) => problemId != problem.id,
             ),
           } satisfies Partial<DBUser>);
-          transcation.update(problemRef, {
+          transaction.update(problemRef, {
             likes: problemData.likes - 1,
           } satisfies Partial<DBProblem>);
 
@@ -77,13 +85,13 @@ const ProblemDescription = ({ problem }: Props) => {
             },
           };
         } else if (disliked) {
-          transcation.update(userRef, {
+          transaction.update(userRef, {
             likedProblems: [...userData.likedProblems, problem.id],
             dislikedProblems: userData.dislikedProblems.filter(
               (problemId) => problemId != problem.id,
             ),
           } satisfies Partial<DBUser>);
-          transcation.update(problemRef, {
+          transaction.update(problemRef, {
             likes: problemData.likes + 1,
             dislikes: problemData.dislikes - 1,
           } satisfies Partial<DBProblem>);
@@ -99,10 +107,10 @@ const ProblemDescription = ({ problem }: Props) => {
             },
           };
         } else {
-          transcation.update(userRef, {
+          transaction.update(userRef, {
             likedProblems: [...userData.likedProblems, problem.id],
           } satisfies Partial<DBUser>);
-          transcation.update(problemRef, {
+          transaction.update(problemRef, {
             likes: problemData.likes + 1,
           } satisfies Partial<DBProblem>);
 
@@ -116,7 +124,7 @@ const ProblemDescription = ({ problem }: Props) => {
           };
         }
       }
-      console.log("ending like transcation");
+      console.log("ending like transaction");
     });
 
     setUserData((prevUserData) =>
@@ -148,21 +156,21 @@ const ProblemDescription = ({ problem }: Props) => {
 
     setUpdating(true);
     // update user data and problem data in both firestore and app state
-    const newStates = await runTransaction(firestore, async (transcation) => {
+    const newStates = await runTransaction(firestore, async (transaction) => {
       console.log("starting dislike transaction");
       const { userRef, problemRef, userDoc, problemDoc } =
-        await returnUserDataAndProblemData(transcation);
+        await returnUserDataAndProblemData(transaction);
 
       if (userDoc.exists() && problemDoc.exists()) {
         const userData = userDoc.data() as DBUser;
         const problemData = problemDoc.data() as DBProblem;
         if (disliked) {
-          transcation.update(userRef, {
+          transaction.update(userRef, {
             dislikedProblems: userData.dislikedProblems.filter(
               (problemId) => problemId != problem.id,
             ),
           } satisfies Partial<DBUser>);
-          transcation.update(problemRef, {
+          transaction.update(problemRef, {
             dislikes: problemData.dislikes - 1,
           } satisfies Partial<DBProblem>);
 
@@ -175,13 +183,13 @@ const ProblemDescription = ({ problem }: Props) => {
             },
           };
         } else if (liked) {
-          transcation.update(userRef, {
+          transaction.update(userRef, {
             likedProblems: userData.likedProblems.filter(
               (problemId) => problemId != problem.id,
             ),
             dislikedProblems: [...userData.dislikedProblems, problem.id],
           } satisfies Partial<DBUser>);
-          transcation.update(problemRef, {
+          transaction.update(problemRef, {
             likes: problemData.likes - 1,
             dislikes: problemData.dislikes + 1,
           } satisfies Partial<DBProblem>);
@@ -197,10 +205,10 @@ const ProblemDescription = ({ problem }: Props) => {
             },
           };
         } else {
-          transcation.update(userRef, {
+          transaction.update(userRef, {
             dislikedProblems: [...userData.dislikedProblems, problem.id],
           } satisfies Partial<DBUser>);
-          transcation.update(problemRef, {
+          transaction.update(problemRef, {
             dislikes: problemData.dislikes + 1,
           } satisfies Partial<DBProblem>);
 
@@ -230,6 +238,35 @@ const ProblemDescription = ({ problem }: Props) => {
           : prevProblem
         : undefined,
     );
+    setUpdating(false);
+  };
+
+  const handleFavorite = async () => {
+    if (!user) {
+      toast.error(
+        "You must be logged in to add a problem to favorite list.",
+        toastConfig,
+      );
+      return;
+    }
+
+    if (updating) {
+      return;
+    }
+
+    setUpdating(true);
+    const userRef = doc(firestore, "users", user.uid);
+    if (starred) {
+      await updateDoc(userRef, {
+        starredProblems: arrayRemove(problem.id),
+      });
+      setUserData((prevUserData) => ({ ...prevUserData, starred: false }));
+    } else {
+      await updateDoc(userRef, {
+        starredProblems: arrayUnion(problem.id),
+      });
+      setUserData((prevUserData) => ({ ...prevUserData, starred: true }));
+    }
     setUpdating(false);
   };
 
@@ -297,9 +334,13 @@ const ProblemDescription = ({ problem }: Props) => {
                 </div>
                 <div
                   className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
-                  // onClick={handleLike}
+                  onClick={handleFavorite}
                 >
-                  <AiFillStar className={`${starred && "text-yellow-500"}`} />
+                  {updating ? (
+                    <Spinner></Spinner>
+                  ) : (
+                    <AiFillStar className={`${starred && "text-yellow-500"}`} />
+                  )}
                 </div>
               </div>
             ) : (
