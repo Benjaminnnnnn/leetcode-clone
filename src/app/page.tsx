@@ -79,7 +79,7 @@ export default function Home() {
         </div>
 
         {/* add problem form & temporary */}
-        <form
+        {/* <form
           className="mx-auto flex max-w-sm flex-col gap-3 p-6"
           onSubmit={handleSubmit}
         >
@@ -126,7 +126,7 @@ export default function Home() {
             name="link"
           />
           <button className="bg-white">Add a problem</button>
-        </form>
+        </form> */}
       </main>
     </>
   );
