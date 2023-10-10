@@ -4,7 +4,7 @@ import ProblemDescriptionTabSkeleton from "@/components/Skeleton/ProblemDescript
 import { auth, firestore } from "@/firebase/firebase";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { DBProblem, Problem } from "@/utils/types/problem";
-import { DBUser, DBUser } from "@/utils/types/users";
+import { DBUser } from "@/utils/types/users";
 import { Transaction, doc, getDoc, runTransaction } from "firebase/firestore";
 import DOMPurify from "isomorphic-dompurify";
 import { useCallback, useEffect, useState } from "react";
@@ -49,15 +49,15 @@ const ProblemDescription = ({ problem }: Props) => {
 
     setUpdating(true);
     // update user data and problem data in both firestore and app state
-    await runTransaction(firestore, async (transcation) => {
+    const newStates = await runTransaction(firestore, async (transcation) => {
       console.log("starting like transcation");
       const { userRef, problemRef, userDoc, problemDoc } =
         await returnUserDataAndProblemData(transcation);
 
       if (userDoc.exists() && problemDoc.exists()) {
-        console.log("entered");
         const userData = userDoc.data() as DBUser;
         const problemData = problemDoc.data() as DBProblem;
+
         if (liked) {
           transcation.update(userRef, {
             likedProblems: userData.likedProblems.filter(
@@ -67,12 +67,15 @@ const ProblemDescription = ({ problem }: Props) => {
           transcation.update(problemRef, {
             likes: problemData.likes - 1,
           } satisfies Partial<DBProblem>);
-          setUserData((prevUserData) => ({ ...prevUserData, liked: false }));
-          setCurrentProblem((prevProblem) =>
-            prevProblem
-              ? { ...prevProblem, likes: prevProblem.likes - 1 }
-              : undefined,
-          );
+
+          return {
+            newUserState: {
+              liked: false,
+            },
+            newProblemState: {
+              likes: currentProblem ? currentProblem.likes - 1 : 0,
+            },
+          };
         } else if (disliked) {
           transcation.update(userRef, {
             likedProblems: [...userData.likedProblems, problem.id],
@@ -84,20 +87,17 @@ const ProblemDescription = ({ problem }: Props) => {
             likes: problemData.likes + 1,
             dislikes: problemData.dislikes - 1,
           } satisfies Partial<DBProblem>);
-          setUserData((prevUserData) => ({
-            ...prevUserData,
-            liked: true,
-            disliked: false,
-          }));
-          setCurrentProblem((prevProblem) =>
-            prevProblem
-              ? {
-                  ...prevProblem,
-                  likes: prevProblem.likes + 1,
-                  dislikes: prevProblem.dislikes - 1,
-                }
-              : undefined,
-          );
+
+          return {
+            newUserState: {
+              liked: true,
+              disliked: false,
+            },
+            newProblemState: {
+              likes: currentProblem ? currentProblem.likes + 1 : 0,
+              dislikes: currentProblem ? currentProblem.dislikes - 1 : 0,
+            },
+          };
         } else {
           transcation.update(userRef, {
             likedProblems: [...userData.likedProblems, problem.id],
@@ -105,16 +105,33 @@ const ProblemDescription = ({ problem }: Props) => {
           transcation.update(problemRef, {
             likes: problemData.likes + 1,
           } satisfies Partial<DBProblem>);
-          setUserData((prevUserData) => ({ ...prevUserData, liked: true }));
-          setCurrentProblem((prevProblem) =>
-            prevProblem
-              ? { ...prevProblem, likes: prevProblem.likes + 1 }
-              : undefined,
-          );
+
+          return {
+            newUserState: {
+              liked: true,
+            },
+            newProblemState: {
+              likes: currentProblem ? currentProblem.likes + 1 : 0,
+            },
+          };
         }
       }
       console.log("ending like transcation");
     });
+
+    setUserData((prevUserData) =>
+      newStates
+        ? { disliked, starred, solved, ...newStates.newUserState }
+        : prevUserData,
+    );
+
+    setCurrentProblem((prevProblem) =>
+      prevProblem
+        ? newStates
+          ? { ...prevProblem, ...newStates.newProblemState }
+          : prevProblem
+        : undefined,
+    );
 
     setUpdating(false);
   };
@@ -131,7 +148,7 @@ const ProblemDescription = ({ problem }: Props) => {
 
     setUpdating(true);
     // update user data and problem data in both firestore and app state
-    await runTransaction(firestore, async (transcation) => {
+    const newStates = await runTransaction(firestore, async (transcation) => {
       console.log("starting dislike transaction");
       const { userRef, problemRef, userDoc, problemDoc } =
         await returnUserDataAndProblemData(transcation);
@@ -148,12 +165,15 @@ const ProblemDescription = ({ problem }: Props) => {
           transcation.update(problemRef, {
             dislikes: problemData.dislikes - 1,
           } satisfies Partial<DBProblem>);
-          setUserData((prevUserData) => ({ ...prevUserData, disliked: false }));
-          setCurrentProblem((prevProblem) =>
-            prevProblem
-              ? { ...prevProblem, dislikes: prevProblem.dislikes - 1 }
-              : undefined,
-          );
+
+          return {
+            newUserState: {
+              disliked: false,
+            },
+            newProblemState: {
+              dislikes: currentProblem ? currentProblem.dislikes - 1 : 0,
+            },
+          };
         } else if (liked) {
           transcation.update(userRef, {
             likedProblems: userData.likedProblems.filter(
@@ -165,20 +185,17 @@ const ProblemDescription = ({ problem }: Props) => {
             likes: problemData.likes - 1,
             dislikes: problemData.dislikes + 1,
           } satisfies Partial<DBProblem>);
-          setUserData((prevUserData) => ({
-            ...prevUserData,
-            liked: false,
-            disliked: true,
-          }));
-          setCurrentProblem((prevProblem) =>
-            prevProblem
-              ? {
-                  ...prevProblem,
-                  likes: prevProblem.likes - 1,
-                  dislikes: prevProblem.dislikes + 1,
-                }
-              : undefined,
-          );
+
+          return {
+            newUserState: {
+              liked: false,
+              disliked: true,
+            },
+            newProblemState: {
+              likes: currentProblem ? currentProblem.likes - 1 : 0,
+              dislikes: currentProblem ? currentProblem.dislikes + 1 : 0,
+            },
+          };
         } else {
           transcation.update(userRef, {
             dislikedProblems: [...userData.dislikedProblems, problem.id],
@@ -186,21 +203,35 @@ const ProblemDescription = ({ problem }: Props) => {
           transcation.update(problemRef, {
             dislikes: problemData.dislikes + 1,
           } satisfies Partial<DBProblem>);
-          setUserData((prevUserData) => ({ ...prevUserData, disliked: true }));
-          setCurrentProblem((prevProblem) =>
-            prevProblem
-              ? { ...prevProblem, dislikes: prevProblem.dislikes + 1 }
-              : undefined,
-          );
+
+          return {
+            newUserState: {
+              disliked: true,
+            },
+            newProblemState: {
+              dislikes: currentProblem ? currentProblem.dislikes + 1 : 0,
+            },
+          };
         }
       }
       console.log("ending dislike transaction");
     });
+
+    setUserData((prevUserData) =>
+      newStates
+        ? { liked, starred, solved, ...newStates.newUserState }
+        : prevUserData,
+    );
+
+    setCurrentProblem((prevProblem) =>
+      prevProblem
+        ? newStates
+          ? { ...prevProblem, ...newStates.newProblemState }
+          : prevProblem
+        : undefined,
+    );
     setUpdating(false);
   };
-
-  console.log(currentProblem);
-  console.log(liked, disliked);
 
   return (
     <>
