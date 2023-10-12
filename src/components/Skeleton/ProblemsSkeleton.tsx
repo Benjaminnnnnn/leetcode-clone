@@ -28,12 +28,13 @@ const ProblemsSkeleton = (props: Props) => {
       role="status"
       className="mx-auto w-full animate-pulse space-y-4 divide-y divide-gray-200 rounded p-4 sm:w-4/5 md:p-6"
     >
-      {Array.from(new Array(5)).map((_) => (
-        <>
-          <SkeletonOdd></SkeletonOdd>
-          <SkeletonEven></SkeletonEven>
-        </>
-      ))}
+      {Array.from(new Array(10)).map((_, idx) =>
+        idx % 2 == 0 ? (
+          <SkeletonOdd key={idx}></SkeletonOdd>
+        ) : (
+          <SkeletonEven key={idx}></SkeletonEven>
+        ),
+      )}
       <span className="sr-only">Loading...</span>
     </div>
   );

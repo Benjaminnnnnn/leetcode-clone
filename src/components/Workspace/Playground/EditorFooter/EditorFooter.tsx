@@ -5,9 +5,11 @@ import {
 import { MdOutlineKeyboardArrowUp } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
-type Props = {};
+type Props = {
+  handleSubmit: () => void;
+};
 
-const EditorFooter = (props: Props) => {
+const EditorFooter = ({ handleSubmit }: Props) => {
   //  need to fix absolute position covering test case text style
 
   const dispatch = useDispatch();
@@ -33,10 +35,16 @@ const EditorFooter = (props: Props) => {
         </span>
       </button>
       <div className="flex items-center gap-2">
-        <button className={`${buttonStyles} bg-white/10 hover:bg-stone-500`}>
+        <button
+          className={`${buttonStyles} bg-white/10 hover:bg-stone-500`}
+          onClick={handleSubmit}
+        >
           Run
         </button>
-        <button className={`${buttonStyles} bg-green-500 hover:bg-green-700`}>
+        <button
+          className={`${buttonStyles} bg-green-500 hover:bg-green-700`}
+          onClick={handleSubmit}
+        >
           Submit
         </button>
       </div>
