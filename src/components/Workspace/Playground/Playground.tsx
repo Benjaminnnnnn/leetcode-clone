@@ -4,8 +4,9 @@ import { useEditorTheme } from "@/hooks/useEditorTheme";
 import { problems } from "@/utils/problems";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { Problem } from "@/utils/types/problem";
+import { arrayUnion, doc, updateDoc } from "@firebase/firestore";
 import Editor from "@monaco-editor/react";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import * as acorn from "acorn";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -41,39 +42,65 @@ const Playground = ({ problem }: Props) => {
     }
 
     try {
-      // const callback = new Function(userCode)();
-      const callback = new Function(`return ${userCode}`)();
-      const handlerFunction = problems[id as string].handlerFunction;
-      if (handlerFunction instanceof Function) {
-        const passed = handlerFunction(callback);
-        if (passed) {
-          toast.success("All test cases have passed!", {
-            ...toastConfig,
-            autoClose: 5000,
-          });
+      const problem = problems[id as string];
+      const parsedCode = acorn.parse(userCode, { ecmaVersion: "latest" });
 
-          const userRef = doc(firestore, "users", user.uid);
-          await updateDoc(userRef, {
-            solvedProblems: arrayUnion(id),
-          });
+      if (parsedCode.body) {
+        const functionNode = parsedCode.body.find(
+          (node) => node.type === "FunctionDeclaration",
+        );
+
+        if (functionNode) {
+          const functionBody = userCode.slice(
+            functionNode.start,
+            functionNode.end,
+          );
+
+          const callback = new Function(`return ${functionBody}`)();
+          const handlerFunction = problem.handlerFunction;
+          if (handlerFunction instanceof Function) {
+            const passed = handlerFunction(callback);
+            if (passed) {
+              toast.success("All test cases have passed!", {
+                ...toastConfig,
+                autoClose: 5000,
+              });
+
+              const userRef = doc(firestore, "users", user.uid);
+              await updateDoc(userRef, {
+                solvedProblems: arrayUnion(id),
+              });
+            }
+          } else {
+            throw new Error(
+              `${id}: handlerFunction property is not a function: `,
+            );
+          }
+        } else {
+          throw new Error("User code is not a valid function!");
         }
-      } else {
-        throw new Error(`${id}: handlerFunction property is not a function: `);
       }
     } catch (error: any) {
+      let errorMessage;
       if (
         error.message.startsWith(
           "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal",
         )
       ) {
-        toast.error("One or more test cases failed.", {
-          ...toastConfig,
-          autoClose: 5000,
-        });
+        errorMessage = "One or more test cases failed.";
+      } else if (error.message.startsWith("Unterminated regular expression")) {
+        errorMessage = error.message;
+      } else if ((error.message.startsWith("Unexpected token"), toastConfig)) {
+        errorMessage = error.message;
       } else {
         console.log(error.message);
-        toast.error("Something went wrong! Please try again", toastConfig);
+        errorMessage = "Something went wrong! Please try again";
       }
+
+      toast.error(errorMessage, {
+        ...toastConfig,
+        autoClose: 5000,
+      });
     }
   };
 
