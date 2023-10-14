@@ -22,12 +22,10 @@ const handlerTwoSum = (fn: any) => {
     // test user solution
     for (let i = 0; i < nums.length; i++) {
       const result = fn(nums[i], targets[i]);
-      console.log(i, result);
       assert.deepStrictEqual(result, answers[i]);
     }
     return true;
   } catch (error: any) {
-    console.log("twoSum handler failed");
     throw new Error(error);
   }
 };

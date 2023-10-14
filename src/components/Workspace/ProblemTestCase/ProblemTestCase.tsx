@@ -9,7 +9,7 @@ const ProblemTestCase = ({ problem }: Props) => {
   const [activeTestCase, setActiveTestCase] = useState(0);
 
   return (
-    <div className="flex w-full flex-col justify-between gap-2 overflow-auto px-5">
+    <div className="flex w-full flex-col justify-between gap-2 overflow-auto px-5 pb-10">
       <div className="flex flex-col overflow-y-auto">
         {/* Test case heading */}
         <div className="mt-2 flex h-10 items-center gap-6">
@@ -43,7 +43,9 @@ const ProblemTestCase = ({ problem }: Props) => {
               {problem.examples[activeTestCase].inputText}
             </code>
 
-            <span className="text-sm font-medium text-white">Output:</span>
+            <span className="text-sm font-medium text-white">
+              Expected Output:
+            </span>
             <code className="w-max min-w-full cursor-text whitespace-nowrap rounded-lg border-none px-3 py-[10px] text-white">
               {problem.examples[activeTestCase].outputText}
             </code>

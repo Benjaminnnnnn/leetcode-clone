@@ -1,18 +1,17 @@
 import Spinner from "@/components/Loader/Spinner";
+import { auth, firestore } from "@/firebase/firebase";
 import { useEditorTheme } from "@/hooks/useEditorTheme";
+import { problems } from "@/utils/problems";
+import { toastConfig } from "@/utils/react-toastify/toast";
 import { Problem } from "@/utils/types/problem";
 import Editor from "@monaco-editor/react";
-import { ChangeEvent, useEffect, useState } from "react";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { toast } from "react-toastify";
 import EditorFooter from "./EditorFooter/EditorFooter";
 import PreferenceNav from "./PreferenceNav/PreferenceNav";
-import { toast } from "react-toastify";
-import { toastConfig } from "@/utils/react-toastify/toast";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, firestore } from "@/firebase/firebase";
-import { useParams, usePathname } from "next/navigation";
-import { problems } from "@/utils/problems";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { DBUser } from "@/utils/types/users";
 
 type Props = {
   problem: Problem;
@@ -42,11 +41,10 @@ const Playground = ({ problem }: Props) => {
     }
 
     try {
-      const callback = new Function(userCode);
-      // const callback = new Function(`return ${userCode}`)();
+      // const callback = new Function(userCode)();
+      const callback = new Function(`return ${userCode}`)();
       const handlerFunction = problems[id as string].handlerFunction;
       if (handlerFunction instanceof Function) {
-        console.log(callback);
         const passed = handlerFunction(callback);
         if (passed) {
           toast.success("All test cases have passed!", {
@@ -63,7 +61,19 @@ const Playground = ({ problem }: Props) => {
         throw new Error(`${id}: handlerFunction property is not a function: `);
       }
     } catch (error: any) {
-      console.log(error.message);
+      if (
+        error.message.startsWith(
+          "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal",
+        )
+      ) {
+        toast.error("One or more test cases failed.", {
+          ...toastConfig,
+          autoClose: 5000,
+        });
+      } else {
+        console.log(error.message);
+        toast.error("Something went wrong! Please try again", toastConfig);
+      }
     }
   };
 

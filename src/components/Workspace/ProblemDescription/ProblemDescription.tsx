@@ -1,4 +1,5 @@
 // import * as DOMPurify from "dompurify";
+import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip";
 import Spinner from "@/components/Loader/Spinner";
 import ProblemDescriptionTabSkeleton from "@/components/Skeleton/ProblemDescriptionTabSkeleton";
 import { auth, firestore } from "@/firebase/firebase";
@@ -58,7 +59,6 @@ const ProblemDescription = ({ problem }: Props) => {
     setUpdating(true);
     // update user data and problem data in both firestore and app state
     const newStates = await runTransaction(firestore, async (transaction) => {
-      console.log("starting like transaction");
       const { userRef, problemRef, userDoc, problemDoc } =
         await returnUserDataAndProblemData(transaction);
 
@@ -124,7 +124,6 @@ const ProblemDescription = ({ problem }: Props) => {
           };
         }
       }
-      console.log("ending like transaction");
     });
 
     setUserData((prevUserData) =>
@@ -157,7 +156,6 @@ const ProblemDescription = ({ problem }: Props) => {
     setUpdating(true);
     // update user data and problem data in both firestore and app state
     const newStates = await runTransaction(firestore, async (transaction) => {
-      console.log("starting dislike transaction");
       const { userRef, problemRef, userDoc, problemDoc } =
         await returnUserDataAndProblemData(transaction);
 
@@ -222,7 +220,6 @@ const ProblemDescription = ({ problem }: Props) => {
           };
         }
       }
-      console.log("ending dislike transaction");
     });
 
     setUserData((prevUserData) =>
@@ -332,8 +329,15 @@ const ProblemDescription = ({ problem }: Props) => {
                     <p className="text-xs">{currentProblem.dislikes}</p>
                   )}
                 </div>
-                <div
+                {/* <div
                   className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                  onClick={handleFavorite}
+                > */}
+                <ButtonWithTooltip
+                  className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                  tooltip={{
+                    text: "Add to favorite list",
+                  }}
                   onClick={handleFavorite}
                 >
                   {updating ? (
@@ -341,7 +345,8 @@ const ProblemDescription = ({ problem }: Props) => {
                   ) : (
                     <AiFillStar className={`${starred && "text-yellow-500"}`} />
                   )}
-                </div>
+                </ButtonWithTooltip>
+                {/* </div> */}
               </div>
             ) : (
               <ProblemDescriptionTabSkeleton
