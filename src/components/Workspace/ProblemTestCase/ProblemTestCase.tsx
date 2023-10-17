@@ -1,5 +1,7 @@
+import { selectTestCaseOutputs } from "@/redux/features/workspace/workspaceSlice";
 import { Problem } from "@/utils/types/problem";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 type Props = {
   problem: Problem;
@@ -7,6 +9,10 @@ type Props = {
 
 const ProblemTestCase = ({ problem }: Props) => {
   const [activeTestCase, setActiveTestCase] = useState(0);
+  const userOutputs = useSelector(selectTestCaseOutputs);
+
+  console.log("all user ouptus:", userOutputs, typeof userOutputs);
+  console.log("user output:", userOutputs[activeTestCase]);
 
   return (
     <div className="flex w-full flex-col justify-between gap-2 overflow-auto px-5 pb-10">
@@ -42,6 +48,15 @@ const ProblemTestCase = ({ problem }: Props) => {
             <code className="w-max min-w-full cursor-text whitespace-nowrap rounded-lg border-none px-3 py-[10px] text-white">
               {problem.examples[activeTestCase].inputText}
             </code>
+
+            {userOutputs.length > 0 && (
+              <>
+                <span className="text-sm font-medium text-white">Outputs:</span>
+                <code className="w-max min-w-full cursor-text whitespace-nowrap rounded-lg border-none px-3 py-[10px] text-white">
+                  {`[${userOutputs[activeTestCase].join(", ")}]`}
+                </code>
+              </>
+            )}
 
             <span className="text-sm font-medium text-white">
               Expected Output:

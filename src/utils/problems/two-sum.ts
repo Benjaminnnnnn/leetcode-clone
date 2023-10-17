@@ -20,11 +20,14 @@ const handlerTwoSum = (fn: any) => {
     ];
 
     // test user solution
+    const outputs = [];
     for (let i = 0; i < nums.length; i++) {
       const result = fn(nums[i], targets[i]);
+      outputs.push(result);
       assert.deepStrictEqual(result, answers[i]);
     }
-    return true;
+    // return true;
+    return outputs;
   } catch (error: any) {
     throw new Error(error);
   }
@@ -38,14 +41,14 @@ export const twoSum: Problem = {
     {
       id: 0,
       inputText: "nums = [2,7,11,15], target = 9",
-      outputText: "[0,1]",
+      outputText: "[0, 1]",
       explanation: "Because nums[0] + nums[1] == 9, return [0, 1].",
     },
     {
       id: 1,
       img: example.src,
       inputText: "nums = [4,2,11,7], target = 9",
-      outputText: "[1,3]",
+      outputText: "[1, 3]",
       explanation: "Because nums[1] + nums[3] == 9, return [1, 3].",
     },
     {

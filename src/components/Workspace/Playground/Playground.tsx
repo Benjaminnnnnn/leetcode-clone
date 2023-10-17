@@ -1,6 +1,7 @@
 import Spinner from "@/components/Loader/Spinner";
 import { auth, firestore } from "@/firebase/firebase";
 import { useEditorTheme } from "@/hooks/useEditorTheme";
+import { updateTestCaseOutputs } from "@/redux/features/workspace/workspaceSlice";
 import { problems } from "@/utils/problems";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { Problem } from "@/utils/types/problem";
@@ -10,6 +11,7 @@ import * as acorn from "acorn";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import EditorFooter from "./EditorFooter/EditorFooter";
 import PreferenceNav from "./PreferenceNav/PreferenceNav";
@@ -34,6 +36,7 @@ const Playground = ({ problem }: Props) => {
   });
   const [user] = useAuthState(auth);
   const { id } = useParams();
+  const dispatch = useDispatch();
 
   const handleSubmit = async () => {
     if (!user) {
@@ -59,8 +62,10 @@ const Playground = ({ problem }: Props) => {
           const callback = new Function(`return ${functionBody}`)();
           const handlerFunction = problem.handlerFunction;
           if (handlerFunction instanceof Function) {
-            const passed = handlerFunction(callback);
-            if (passed) {
+            const outputs = handlerFunction(callback);
+            console.log("handler function returned outputs");
+            if (outputs) {
+              dispatch(updateTestCaseOutputs(outputs));
               toast.success("All test cases have passed!", {
                 ...toastConfig,
                 autoClose: 5000,
