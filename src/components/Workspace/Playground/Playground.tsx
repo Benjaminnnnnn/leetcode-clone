@@ -1,10 +1,10 @@
 import Spinner from "@/components/Loader/Spinner";
 import { auth, firestore } from "@/firebase/firebase";
 import { useEditorTheme } from "@/hooks/useEditorTheme";
-import { updateTestCaseOutputs } from "@/redux/features/workspace/workspaceSlice";
+import { updateTestCaseResults } from "@/redux/features/workspace/workspaceSlice";
 import { problems } from "@/utils/problems";
 import { toastConfig } from "@/utils/react-toastify/toast";
-import { Problem } from "@/utils/types/problem";
+import { Problem, isTestCaseResults } from "@/utils/types/problem";
 import { arrayUnion, doc, updateDoc } from "@firebase/firestore";
 import Editor from "@monaco-editor/react";
 import * as acorn from "acorn";
@@ -44,6 +44,8 @@ const Playground = ({ problem }: Props) => {
       return;
     }
 
+    console.log("running code");
+
     try {
       const problem = problems[id as string];
       const parsedCode = acorn.parse(userCode, { ecmaVersion: "latest" });
@@ -63,18 +65,22 @@ const Playground = ({ problem }: Props) => {
           const handlerFunction = problem.handlerFunction;
           if (handlerFunction instanceof Function) {
             const outputs = handlerFunction(callback);
-            console.log("handler function returned outputs");
-            if (outputs) {
-              dispatch(updateTestCaseOutputs(outputs));
-              toast.success("All test cases have passed!", {
-                ...toastConfig,
-                autoClose: 5000,
-              });
+            if (isTestCaseResults(outputs)) {
+              dispatch(updateTestCaseResults(outputs));
 
-              const userRef = doc(firestore, "users", user.uid);
-              await updateDoc(userRef, {
-                solvedProblems: arrayUnion(id),
-              });
+              if (outputs.allPassed) {
+                toast.success("All test cases have passed!", {
+                  ...toastConfig,
+                  autoClose: 5000,
+                });
+
+                const userRef = doc(firestore, "users", user.uid);
+                await updateDoc(userRef, {
+                  solvedProblems: arrayUnion(id),
+                });
+              } else {
+                toast.error("One or more test cases failed.", toastConfig);
+              }
             }
           } else {
             throw new Error(
@@ -87,6 +93,7 @@ const Playground = ({ problem }: Props) => {
       }
     } catch (error: any) {
       let errorMessage;
+      dispatch(updateTestCaseResults({ allPassed: true, results: [] }));
       if (
         error.message.startsWith(
           "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal",

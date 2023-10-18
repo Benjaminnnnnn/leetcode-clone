@@ -1,7 +1,7 @@
-import assert from "assert";
-import { Problem } from "../types/problem";
+import _ from "lodash";
+import { Problem, TestCaseResults } from "../types/problem";
 
-export const jumpGameHandler = (fn: any) => {
+export const jumpGameHandler = (fn: Function) => {
   try {
     const tests = [
       [2, 3, 1, 1, 4],
@@ -10,11 +10,23 @@ export const jumpGameHandler = (fn: any) => {
       [2, 5, 0, 0],
     ];
     const answers = [true, false, true, true];
+    // test user solution
+    const results: TestCaseResults = {
+      allPassed: true,
+      results: [],
+    };
     for (let i = 0; i < tests.length; i++) {
       const result = fn(tests[i]);
-      assert.equal(result, answers[i]);
+      const passed = _.isEqual(result, answers[i]);
+      results.allPassed = results.allPassed && passed;
+      results.results.push({
+        passed: passed,
+        userOutputs: result,
+      });
+      // assert.equal(result, answers[i]);
     }
-    return true;
+    return results;
+    // return true;
   } catch (error: any) {
     console.log("Error from jumpGameHandler: ", error);
     throw new Error(error);

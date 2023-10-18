@@ -1,4 +1,4 @@
-import { selectTestCaseOutputs } from "@/redux/features/workspace/workspaceSlice";
+import { selectTestCaseResults } from "@/redux/features/workspace/workspaceSlice";
 import { Problem } from "@/utils/types/problem";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -9,10 +9,12 @@ type Props = {
 
 const ProblemTestCase = ({ problem }: Props) => {
   const [activeTestCase, setActiveTestCase] = useState(0);
-  const userOutputs = useSelector(selectTestCaseOutputs);
+  const results = useSelector(selectTestCaseResults);
 
-  console.log("all user ouptus:", userOutputs, typeof userOutputs);
-  console.log("user output:", userOutputs[activeTestCase]);
+  if (results.length > 0) {
+    console.log(typeof results[activeTestCase].userOutputs);
+  }
+  console.log("all user ouptus:", results);
 
   return (
     <div className="flex w-full flex-col justify-between gap-2 overflow-auto px-5 pb-10">
@@ -28,17 +30,25 @@ const ProblemTestCase = ({ problem }: Props) => {
         </div>
 
         {/* Actual test cases */}
-        <div className="shrink-1">
-          <div className="mt-2 flex items-center gap-4 text-white">
+        <div className="shrink-1 mt-2">
+          <div className="flex items-center gap-4 text-white">
             {problem.examples.map((_, index) => (
               <p
                 key={index}
                 className={`${
                   activeTestCase === index ? "bg-stone-500" : "bg-dark-layer-3"
-                } relative inline-flex cursor-pointer items-center whitespace-nowrap rounded-xl  px-4 py-2 text-sm font-medium transition-all hover:bg-stone-500`}
+                } relative inline-flex cursor-pointer items-center whitespace-nowrap rounded px-4 py-1.5 text-sm font-medium transition-all hover:bg-stone-500`}
                 onClick={() => setActiveTestCase(index)}
               >
-                Case {index + 1}
+                <span>Case {index + 1}</span>
+
+                {results.length > 0 && (
+                  <span
+                    className={`absolute right-0 top-0 h-2 w-2 -translate-y-1/3 translate-x-1/2 rounded-full ${
+                      results[index].passed ? "bg-green-500" : "bg-rose-500"
+                    }`}
+                  ></span>
+                )}
               </p>
             ))}
           </div>
@@ -49,11 +59,13 @@ const ProblemTestCase = ({ problem }: Props) => {
               {problem.examples[activeTestCase].inputText}
             </code>
 
-            {userOutputs.length > 0 && (
+            {results.length > 0 && (
               <>
                 <span className="text-sm font-medium text-white">Outputs:</span>
                 <code className="w-max min-w-full cursor-text whitespace-nowrap rounded-lg border-none px-3 py-[10px] text-white">
-                  {`[${userOutputs[activeTestCase].join(", ")}]`}
+                  {results[activeTestCase].userOutputs instanceof Array
+                    ? `[${results[activeTestCase].userOutputs.join(",")}]`
+                    : results[activeTestCase].userOutputs.toString()}
                 </code>
               </>
             )}

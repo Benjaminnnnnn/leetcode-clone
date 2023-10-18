@@ -1,14 +1,18 @@
+import { TestCaseResults } from "@/utils/types/problem";
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
 interface WorkspaceState {
   testCaseIsExpanded: boolean;
-  testCaseOutputs: Array<[]>;
+  testCaseResults: TestCaseResults;
 }
 
 const initialState: WorkspaceState = {
   testCaseIsExpanded: true,
-  testCaseOutputs: [],
+  testCaseResults: {
+    allPassed: true,
+    results: [],
+  },
 };
 
 const workspaceSlice = createSlice({
@@ -18,8 +22,8 @@ const workspaceSlice = createSlice({
     toggleTestCase(state, action) {
       state.testCaseIsExpanded = action.payload.testCaseIsExpanded;
     },
-    updateTestCaseOutputs(state, action) {
-      state.testCaseOutputs = [...action.payload];
+    updateTestCaseResults(state, action) {
+      state.testCaseResults = { ...action.payload };
     },
   },
 });
@@ -27,8 +31,8 @@ const workspaceSlice = createSlice({
 export const selectTestCaseIsExpanded = (state: RootState) =>
   state.workspace.testCaseIsExpanded;
 
-export const selectTestCaseOutputs = (state: RootState) =>
-  state.workspace.testCaseOutputs;
+export const selectTestCaseResults = (state: RootState) =>
+  state.workspace.testCaseResults.results;
 
-export const { toggleTestCase, updateTestCaseOutputs } = workspaceSlice.actions;
+export const { toggleTestCase, updateTestCaseResults } = workspaceSlice.actions;
 export default workspaceSlice.reducer;

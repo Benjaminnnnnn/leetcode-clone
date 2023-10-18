@@ -1,11 +1,11 @@
-import assert from "assert";
-import { Problem } from "../types/problem";
+import _ from "lodash";
+import { Problem, TestCaseResults } from "../types/problem";
 import example from "./images/two-sum.png";
 
 const starterCodeTwoSum =
   "function twoSum(nums, target) {\n\t// Write your code here\n}";
 
-const handlerTwoSum = (fn: any) => {
+const handlerTwoSum = (fn: Function) => {
   try {
     const nums = [
       [2, 7, 11, 15],
@@ -20,14 +20,22 @@ const handlerTwoSum = (fn: any) => {
     ];
 
     // test user solution
-    const outputs = [];
+    const results: TestCaseResults = {
+      allPassed: true,
+      results: [],
+    };
     for (let i = 0; i < nums.length; i++) {
-      const result = fn(nums[i], targets[i]);
-      outputs.push(result);
-      assert.deepStrictEqual(result, answers[i]);
+      const result: Number[] = fn(nums[i], targets[i]);
+      const passed = _.isEqual(result, answers[i]);
+      results.allPassed = results.allPassed && passed;
+      results.results.push({
+        passed: passed,
+        userOutputs: result,
+      });
+      // assert.deepStrictEqual(result, answers[i]);
     }
+    return results;
     // return true;
-    return outputs;
   } catch (error: any) {
     throw new Error(error);
   }
@@ -41,20 +49,20 @@ export const twoSum: Problem = {
     {
       id: 0,
       inputText: "nums = [2,7,11,15], target = 9",
-      outputText: "[0, 1]",
+      outputText: "[0,1]",
       explanation: "Because nums[0] + nums[1] == 9, return [0, 1].",
     },
     {
       id: 1,
       img: example.src,
       inputText: "nums = [4,2,11,7], target = 9",
-      outputText: "[1, 3]",
+      outputText: "[1,3]",
       explanation: "Because nums[1] + nums[3] == 9, return [1, 3].",
     },
     {
       id: 2,
       inputText: "nums = [3,3], target = 6",
-      outputText: "[0, 1]",
+      outputText: "[0,1]",
     },
   ],
   constraints: `<li className='mt-2'><code>2 ≤ nums.length ≤ 10<sup>4</sup></code></li><li className='mt-2'><code>-10<sup>4</sup> ≤ nums[i] ≤ 10<sup>4</sup></code></li><li className='mt-2'><code>-10<sup>4</sup> ≤ target ≤ 10<sup>4</sup></code></li><li className='mt-2 text-sm'><strong>Only one valid answer exists.</strong></li>`,

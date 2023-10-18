@@ -290,7 +290,7 @@ const ProblemDescription = ({ problem }: Props) => {
             {!loading && currentProblem ? (
               <div className="flex items-center gap-4">
                 <div
-                  className={`${difficultyClass} inline-block rounded-xl bg-opacity-[0.15] px-2.5 py-1 text-xs font-medium capitalize`}
+                  className={`${difficultyClass} inline-flex items-center rounded-xl bg-opacity-[0.15] px-3 py-1 text-xs font-medium capitalize`}
                 >
                   {currentProblem.difficulty}
                 </div>

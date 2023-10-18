@@ -1,5 +1,5 @@
-import assert from "assert";
-import { Problem } from "../types/problem";
+import _ from "lodash";
+import { Problem, TestCaseResults } from "../types/problem";
 import example from "./images/reverseLL.jpg";
 
 // JS doesn't have a built in LinkedList class, so we'll create one
@@ -25,16 +25,32 @@ class LinkedList {
   }
 }
 
-export const reverseLinkedListHandler = (fn: any) => {
+export const reverseLinkedListHandler = (fn: Function) => {
   try {
-    const tests = [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1], [1, 2, 3], [1]];
-    const answers = [[5, 4, 3, 2, 1], [1, 2, 3, 4, 5], [3, 2, 1], [1]];
+    const tests = [[1, 2, 3, 4, 5], [1, 2, 3], [1]];
+    const answers = [[5, 4, 3, 2, 1], [3, 2, 1], [1]];
+
+    // test user solution
+    const results: TestCaseResults = {
+      allPassed: true,
+      results: [],
+    };
+
     for (let i = 0; i < tests.length; i++) {
       const list = createLinkedList(tests[i]);
-      const result = fn(list);
-      assert.deepEqual(getListValues(result), answers[i]);
+      const result = getListValues(fn(list));
+      const answer = answers[i];
+      const passed =
+        result.length === answer.length ? _.isEqual(result, answers[i]) : false;
+      results.allPassed = results.allPassed && passed;
+      results.results.push({
+        passed: passed,
+        userOutputs: result,
+      });
+      // assert.deepEqual(getListValues(result), answers[i]);
     }
-    return true;
+    return results;
+    // return true;
   } catch (error: any) {
     console.log("Error from reverseLinkedListHandler: ", error);
     throw new Error(error);

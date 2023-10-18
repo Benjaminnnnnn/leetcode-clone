@@ -6,6 +6,18 @@ export type Example = {
   img?: string;
 };
 
+// Single test case result and outputs
+export type TestCaseResult = {
+  passed: boolean;
+  userOutputs: Number[];
+};
+
+// All test cases results and outputs
+export type TestCaseResults = {
+  allPassed: boolean;
+  results: Array<TestCaseResult>;
+};
+
 export type Problem = {
   id: string;
   title: string;
@@ -14,7 +26,7 @@ export type Problem = {
   constraints: string;
   order: number;
   starterCode: string;
-  handlerFunction: ((fn: any) => boolean | Array<[]>) | string;
+  handlerFunction: ((fn: any) => boolean | TestCaseResults) | string;
   starterFunctionName: string;
 };
 
@@ -28,4 +40,10 @@ export type DBProblem = {
   dislikes: number;
   videoId?: string;
   link?: string;
+};
+
+export const isTestCaseResults = (
+  value: boolean | TestCaseResults,
+): value is TestCaseResults => {
+  return (value as TestCaseResults).allPassed !== undefined;
 };
