@@ -2,12 +2,12 @@ import logo from "@/asset/logo.png";
 import { login } from "@/redux/features/auth/authSlice";
 import Image from "next/image";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "react-redux";
 
 type Props = {};
 
 const Navbar = ({}: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <div className="mx-auto w-full bg-stone-500">

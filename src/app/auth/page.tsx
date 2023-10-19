@@ -5,13 +5,13 @@ import AuthModal from "@/components/Modal/AuthModal";
 import Navbar from "@/components/Navbar/Navbar";
 import { auth } from "@/firebase/firebase";
 import { selectOpen, signup } from "@/redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { AiOutlineRight } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
 
 const Auth = () => {
   const informationContainerStyles =
@@ -19,8 +19,8 @@ const Auth = () => {
   const informationStyles =
     "flex max-w-sm flex-col gap-6 px-10 text-center sm:text-left items-center sm:items-start";
 
-  const isOpen = useSelector(selectOpen);
-  const dispatch = useDispatch();
+  const isOpen = useAppSelector(selectOpen);
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [user, loading, error] = useAuthState(auth);
 
@@ -123,8 +123,8 @@ const Auth = () => {
                   Not only does LeetCode prepare candidates for technical
                   interviews, we also provide industrial opportunities. We
                   identify top technical talent from contests to online
-                  assessments. You can directly start top companies' interview
-                  process here.
+                  assessments. You can directly start top companies&apos;
+                  interview process here.
                 </p>
                 <button className="inline-flex items-center gap-1 text-blue-500 hover:text-cyan-400">
                   Browse Opportunities

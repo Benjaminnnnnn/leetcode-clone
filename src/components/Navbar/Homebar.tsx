@@ -4,6 +4,8 @@ import logo from "@/asset/logo.png";
 import { auth } from "@/firebase/firebase";
 import { problems } from "@/mock-data/problems";
 import { login } from "@/redux/features/auth/authSlice";
+import { resetTestCaseResults } from "@/redux/features/workspace/workspaceSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,7 +14,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { CgProfile } from "react-icons/cg";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { PiListFill } from "react-icons/pi";
-import { useDispatch } from "react-redux";
 import ButtonWithTooltip from "../Button/ButtonWithTooltip";
 import Timer from "../Timer/Timer";
 import Logout from "./Logout";
@@ -27,7 +28,7 @@ type Props = {
  */
 const Homebar = ({ problemId }: Props) => {
   const [user, loading, error] = useAuthState(auth);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [problemIndex, setProblemIndex] = useState(
     problems.findIndex((p) => p.id === problemId),
@@ -71,9 +72,10 @@ const Homebar = ({ problemId }: Props) => {
 
   useEffect(() => {
     if (problemId) {
+      dispatch(resetTestCaseResults());
       router.push(`/problems/${problems[problemIndex].id}`);
     }
-  }, [problemIndex, router]);
+  }, [problemIndex, router, dispatch, problemId]);
 
   return (
     <div className="w-full border-gray-300 bg-stone-500">

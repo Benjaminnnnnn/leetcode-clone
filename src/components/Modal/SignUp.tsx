@@ -7,7 +7,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Button from "../Form/FormButton";
 import Input from "../Form/FormInput";
@@ -22,7 +22,7 @@ interface FormState extends FieldValues {
 }
 
 const SignUp = (props: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const {

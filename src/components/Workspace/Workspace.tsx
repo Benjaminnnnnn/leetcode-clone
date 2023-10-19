@@ -3,8 +3,8 @@ import {
   selectTestCaseIsExpanded,
   toggleTestCase,
 } from "@/redux/features/workspace/workspaceSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Problem } from "@/utils/types/problem";
-import { useDispatch, useSelector } from "react-redux";
 import Split from "react-split";
 import Playground from "./Playground/Playground";
 import ProblemDescription from "./ProblemDescription/ProblemDescription";
@@ -15,8 +15,8 @@ type Props = {
 };
 
 const Workspace = ({ problem }: Props) => {
-  const dispatch = useDispatch();
-  const testIsExpanded = useSelector(selectTestCaseIsExpanded);
+  const dispatch = useAppDispatch();
+  const testIsExpanded = useAppSelector(selectTestCaseIsExpanded);
 
   return (
     <Split

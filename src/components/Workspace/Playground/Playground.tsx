@@ -1,7 +1,11 @@
 import Spinner from "@/components/Loader/Spinner";
 import { auth, firestore } from "@/firebase/firebase";
 import { useEditorTheme } from "@/hooks/useEditorTheme";
-import { updateTestCaseResults } from "@/redux/features/workspace/workspaceSlice";
+import {
+  resetTestCaseResults,
+  updateTestCaseResults,
+} from "@/redux/features/workspace/workspaceSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { problems } from "@/utils/problems";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { Problem, isTestCaseResults } from "@/utils/types/problem";
@@ -11,7 +15,6 @@ import * as acorn from "acorn";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import EditorFooter from "./EditorFooter/EditorFooter";
 import PreferenceNav from "./PreferenceNav/PreferenceNav";
@@ -36,7 +39,7 @@ const Playground = ({ problem }: Props) => {
   });
   const [user] = useAuthState(auth);
   const { id } = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleSubmit = async () => {
     if (!user) {
@@ -44,12 +47,11 @@ const Playground = ({ problem }: Props) => {
       return;
     }
 
-    console.log("running code");
-
     try {
       const problem = problems[id as string];
       const parsedCode = acorn.parse(userCode, { ecmaVersion: "latest" });
 
+      // parse user code
       if (parsedCode.body) {
         const functionNode = parsedCode.body.find(
           (node) => node.type === "FunctionDeclaration",
@@ -61,6 +63,7 @@ const Playground = ({ problem }: Props) => {
             functionNode.end,
           );
 
+          // convert user code to actual function and evaluate
           const callback = new Function(`return ${functionBody}`)();
           const handlerFunction = problem.handlerFunction;
           if (handlerFunction instanceof Function) {
@@ -93,7 +96,7 @@ const Playground = ({ problem }: Props) => {
       }
     } catch (error: any) {
       let errorMessage;
-      dispatch(updateTestCaseResults({ allPassed: true, results: [] }));
+      dispatch(resetTestCaseResults());
       if (
         error.message.startsWith(
           "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal",

@@ -47,7 +47,7 @@ const ResetPassword = (props: Props) => {
           Reset Password
         </h2>
         <p className="text-sm text-gray-500">
-          Enter your email below, and we'll send you a reset password email
+          Enter your email below, and we&apos;ll send you a reset password email
           shortly.
         </p>
         <Input

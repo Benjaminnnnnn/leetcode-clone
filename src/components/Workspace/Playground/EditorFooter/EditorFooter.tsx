@@ -2,8 +2,8 @@ import {
   selectTestCaseIsExpanded,
   toggleTestCase,
 } from "@/redux/features/workspace/workspaceSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { MdOutlineKeyboardArrowUp } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
 
 type Props = {
   handleSubmit: () => void;
@@ -12,8 +12,8 @@ type Props = {
 const EditorFooter = ({ handleSubmit }: Props) => {
   //  need to fix absolute position covering test case text style
 
-  const dispatch = useDispatch();
-  const testCaseIsExpanded = useSelector(selectTestCaseIsExpanded);
+  const dispatch = useAppDispatch();
+  const testCaseIsExpanded = useAppSelector(selectTestCaseIsExpanded);
   const buttonStyles =
     "px-4 py-1.5 font-medium items-center transition-all inline-flex rounded-lg text-sm";
 

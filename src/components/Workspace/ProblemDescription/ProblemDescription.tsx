@@ -1,8 +1,9 @@
-// import * as DOMPurify from "dompurify";
 import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip";
 import Spinner from "@/components/Loader/Spinner";
 import ProblemDescriptionTabSkeleton from "@/components/Skeleton/ProblemDescriptionTabSkeleton";
 import { auth, firestore } from "@/firebase/firebase";
+import { selectTestCaseAllPassed } from "@/redux/features/workspace/workspaceSlice";
+import { useAppSelector } from "@/redux/hooks";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { DBProblem, Problem } from "@/utils/types/problem";
 import { DBUser } from "@/utils/types/users";
@@ -16,7 +17,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import DOMPurify from "isomorphic-dompurify";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { AiFillDislike, AiFillLike, AiFillStar } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
@@ -34,6 +35,7 @@ const ProblemDescription = ({ problem }: Props) => {
   const { currentProblem, loading, difficultyClass, setCurrentProblem } =
     useGetCurrentProblem(problem.id);
   const [updating, setUpdating] = useState(false);
+  const allPassed = useAppSelector(selectTestCaseAllPassed);
 
   const returnUserDataAndProblemData = useCallback(
     async (transaction: Transaction) => {
@@ -43,7 +45,7 @@ const ProblemDescription = ({ problem }: Props) => {
       const problemDoc = await transaction.get(problemRef);
       return { userDoc, problemDoc, userRef, problemRef };
     },
-    [user],
+    [user, problem.id],
   );
 
   const handleLike = async () => {
@@ -329,10 +331,7 @@ const ProblemDescription = ({ problem }: Props) => {
                     <p className="text-xs">{currentProblem.dislikes}</p>
                   )}
                 </div>
-                {/* <div
-                  className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
-                  onClick={handleFavorite}
-                > */}
+
                 <ButtonWithTooltip
                   className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
                   tooltip={{
@@ -346,11 +345,10 @@ const ProblemDescription = ({ problem }: Props) => {
                     <AiFillStar className={`${starred && "text-yellow-500"}`} />
                   )}
                 </ButtonWithTooltip>
-                {/* </div> */}
               </div>
             ) : (
               <ProblemDescriptionTabSkeleton
-                solved={solved}
+                solved={solved || allPassed}
               ></ProblemDescriptionTabSkeleton>
             )}
 
@@ -439,12 +437,15 @@ function useGetCurrentProblem(problemId: string) {
 
 function useGetUserDataOnProblem(problemId: string) {
   const [user] = useAuthState(auth);
-  const initialData = {
-    liked: false,
-    disliked: false,
-    starred: false,
-    solved: false,
-  };
+  const initialData = useMemo(
+    () => ({
+      liked: false,
+      disliked: false,
+      starred: false,
+      solved: false,
+    }),
+    [],
+  );
   const [userData, setUserData] = useState(initialData);
 
   useEffect(() => {
@@ -472,7 +473,7 @@ function useGetUserDataOnProblem(problemId: string) {
       fetchUserDataOnProblem();
     }
     return () => setUserData(initialData);
-  }, [problemId, user]);
+  }, [problemId, user, initialData]);
 
   return { ...userData, setUserData };
   // return { ...initialData, setData };

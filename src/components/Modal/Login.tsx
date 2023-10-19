@@ -5,9 +5,9 @@ import {
 } from "@/redux/features/auth/authSlice";
 import { emailRegex } from "@/utils/formValidation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 
 import { auth } from "@/firebase/firebase";
+import { useAppDispatch } from "@/redux/hooks";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { useRouter } from "next/navigation";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
@@ -22,7 +22,7 @@ type FormState = {
 };
 
 const Login = (props: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const {
     register,
@@ -130,7 +130,7 @@ const Login = (props: Props) => {
 
       <div className="mt-4 flex w-full flex-col">
         <p className="text-sm font-light text-gray-500">
-          Don't have an account yet?{" "}
+          Don&apos;t have an account yet?{" "}
           <button
             className="font-medium text-teal-600 hover:underline"
             onClick={() => dispatch(signup())}

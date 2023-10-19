@@ -1,7 +1,7 @@
 import { selectTestCaseResults } from "@/redux/features/workspace/workspaceSlice";
+import { useAppSelector } from "@/redux/hooks";
 import { Problem } from "@/utils/types/problem";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
 type Props = {
   problem: Problem;
@@ -9,12 +9,9 @@ type Props = {
 
 const ProblemTestCase = ({ problem }: Props) => {
   const [activeTestCase, setActiveTestCase] = useState(0);
-  const results = useSelector(selectTestCaseResults);
+  const results = useAppSelector(selectTestCaseResults);
 
-  if (results.length > 0) {
-    console.log(typeof results[activeTestCase].userOutputs);
-  }
-  console.log("all user ouptus:", results);
+  // console.log("all user ouptus:", results);
 
   return (
     <div className="flex w-full flex-col justify-between gap-2 overflow-auto px-5 pb-10">

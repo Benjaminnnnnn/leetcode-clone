@@ -25,6 +25,9 @@ const workspaceSlice = createSlice({
     updateTestCaseResults(state, action) {
       state.testCaseResults = { ...action.payload };
     },
+    resetTestCaseResults(state) {
+      state.testCaseResults = initialState.testCaseResults;
+    },
   },
 });
 
@@ -34,5 +37,9 @@ export const selectTestCaseIsExpanded = (state: RootState) =>
 export const selectTestCaseResults = (state: RootState) =>
   state.workspace.testCaseResults.results;
 
-export const { toggleTestCase, updateTestCaseResults } = workspaceSlice.actions;
+export const selectTestCaseAllPassed = (state: RootState) =>
+  state.workspace.testCaseResults.allPassed;
+
+export const { toggleTestCase, updateTestCaseResults, resetTestCaseResults } =
+  workspaceSlice.actions;
 export default workspaceSlice.reducer;
