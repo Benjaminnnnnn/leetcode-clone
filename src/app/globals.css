@@ -11,15 +11,19 @@
 }
 
 /* dark  scrollbar */
-::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: thin;
 }
 
-::-webkit-scrollbar-track {
+*::-webkit-scrollbar-button {
+  display: none;
+}
+
+*::-webkit-scrollbar-track {
   background: #404040;
 }
 
-::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background: #282828;
 }
 
@@ -81,9 +85,9 @@ code {
   font-size: 1rem;
 }
 
-.example-card pre p {
+/* .example-card pre p {
   white-space: nowrap;
-}
+} */
 
 .skeleton-box {
   position: relative;

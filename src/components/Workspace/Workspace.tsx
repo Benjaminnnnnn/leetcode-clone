@@ -33,11 +33,7 @@ const Workspace = ({ problem }: Props) => {
         snapOffset={100}
         onDragEnd={(sizes) => {
           if ((sizes[1] * window.innerHeight) / 100 <= 100) {
-            dispatch(
-              toggleTestCase({
-                testIsExpanded: false,
-              }),
-            );
+            dispatch(toggleTestCase(false));
           }
         }}
       >

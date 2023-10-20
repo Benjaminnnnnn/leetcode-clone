@@ -34,6 +34,8 @@ const Homebar = ({ problemId }: Props) => {
     problems.findIndex((p) => p.id === problemId),
   );
 
+  console.log("re-render homebar");
+
   const handlePreviousProblem = () => {
     if (problemId && problemIndex > 0) {
       setProblemIndex((prevIndex) => prevIndex - 1);
@@ -48,7 +50,9 @@ const Homebar = ({ problemId }: Props) => {
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.ctrlKey) {
-      e.preventDefault();
+      if (e.key in ["h", "j", "k"]) {
+        e.preventDefault();
+      }
       switch (e.key) {
         case "h":
           router.push("/");

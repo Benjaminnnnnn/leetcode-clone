@@ -27,18 +27,18 @@ const ExampleCard = ({
       )}
       <div className="example-card overflow-x-auto">
         <pre className="w-max min-w-full">
-          <p>
+          <p className="whitespace-nowrap">
             <strong>Input: </strong>
             {inputText}
           </p>
-          <p>
+          <p className="whitespace-nowrap">
             <strong>Output: </strong>
             {outputText}
           </p>
           {explanation && (
-            <p>
+            <p className="whitespace-normal">
               <strong>Explanation: </strong>
-              {outputText}
+              {explanation}
             </p>
           )}
         </pre>

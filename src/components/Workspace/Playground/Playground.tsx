@@ -70,7 +70,7 @@ const Playground = ({ problem }: Props) => {
             const outputs = handlerFunction(callback);
             if (isTestCaseResults(outputs)) {
               dispatch(updateTestCaseResults(outputs));
-
+              console.log(outputs);
               if (outputs.allPassed) {
                 toast.success("All test cases have passed!", {
                   ...toastConfig,
@@ -137,7 +137,7 @@ const Playground = ({ problem }: Props) => {
     }
   }, [id, user, problem.starterCode]);
   return (
-    <div className="overflow-y-auto">
+    <div className="overflow-y-hidden">
       <PreferenceNav></PreferenceNav>
       <Editor
         loading={<Spinner width="w-16"></Spinner>}

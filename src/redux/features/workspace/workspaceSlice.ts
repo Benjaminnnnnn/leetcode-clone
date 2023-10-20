@@ -1,5 +1,5 @@
 import { TestCaseResults } from "@/utils/types/problem";
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
 interface WorkspaceState {
@@ -10,7 +10,7 @@ interface WorkspaceState {
 const initialState: WorkspaceState = {
   testCaseIsExpanded: true,
   testCaseResults: {
-    allPassed: true,
+    allPassed: false,
     results: [],
   },
 };
@@ -19,10 +19,10 @@ const workspaceSlice = createSlice({
   name: "workspace",
   initialState,
   reducers: {
-    toggleTestCase(state, action) {
-      state.testCaseIsExpanded = action.payload.testCaseIsExpanded;
+    toggleTestCase(state, action: PayloadAction<boolean>) {
+      state.testCaseIsExpanded = action.payload;
     },
-    updateTestCaseResults(state, action) {
+    updateTestCaseResults(state, action: PayloadAction<TestCaseResults>) {
       state.testCaseResults = { ...action.payload };
     },
     resetTestCaseResults(state) {

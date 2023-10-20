@@ -296,7 +296,7 @@ const ProblemDescription = ({ problem }: Props) => {
                 >
                   {currentProblem.difficulty}
                 </div>
-                {solved && (
+                {(solved || allPassed) && (
                   <div className="cursor-pointer rounded p-2 text-lg text-teal-600 transition-colors duration-200 hover:text-teal-300">
                     <BsCheck2Circle />
                   </div>
@@ -469,6 +469,7 @@ function useGetUserDataOnProblem(problemId: string) {
         });
       }
     };
+
     if (user) {
       fetchUserDataOnProblem();
     }

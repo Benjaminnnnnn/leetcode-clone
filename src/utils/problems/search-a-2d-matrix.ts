@@ -1,5 +1,5 @@
-import assert from "assert";
-import { Problem } from "../types/problem";
+import _ from "lodash";
+import { Problem, TestCaseResults } from "../types/problem";
 import example1 from "./images/search-a-2d-1.jpg";
 import example2 from "./images/search-a-2d-2.jpg";
 
@@ -22,13 +22,30 @@ export const search2DMatrixHandler = (fn: any) => {
         ],
         target: 13,
       },
+      {
+        matrix: [[1]],
+        target: 1,
+      },
     ];
-    const answers = [true, false];
+    const answers = [true, false, true];
+
+    // test user solution
+    const results: TestCaseResults = {
+      allPassed: true,
+      results: [],
+    };
     for (let i = 0; i < tests.length; i++) {
       const result = fn(tests[i].matrix, tests[i].target);
-      assert.deepEqual(result, answers[i]);
+      const passed = _.isEqual(result, answers[i]);
+      results.allPassed = results.allPassed && passed;
+      results.results.push({
+        passed: passed,
+        userOutputs: result,
+      });
+      // assert.deepEqual(result, answers[i]);
     }
-    return true;
+    return results;
+    // return true;
   } catch (error: any) {
     console.log("Error from searchA2DMatrixHandler: ", error);
     throw new Error(error);

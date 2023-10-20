@@ -1,15 +1,28 @@
-import assert from "assert";
-import { Problem } from "../types/problem";
+import _ from "lodash";
+import { Problem, TestCaseResults } from "../types/problem";
 
 export const validParenthesesHandler = (fn: any) => {
   try {
     const tests = ["()", "()[]{}", "(]", "([)]", "{[]}"];
     const answers = [true, true, false, false, true];
+
+    // test user solution
+    const results: TestCaseResults = {
+      allPassed: true,
+      results: [],
+    };
     for (let i = 0; i < tests.length; i++) {
       const result = fn(tests[i]);
-      assert.deepEqual(result, answers[i]);
+      const passed = _.isEqual(result, answers[i]);
+      results.allPassed = results.allPassed && passed;
+      results.results.push({
+        passed: passed,
+        userOutputs: result,
+      });
+      // assert.deepEqual(result, answers[i]);
     }
-    return true;
+    return results;
+    // return true;
   } catch (error: any) {
     console.error("Error from validParenthesesHandler: ", error);
     throw new Error(error);

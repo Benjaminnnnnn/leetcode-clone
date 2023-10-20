@@ -43,12 +43,11 @@ export const jumpGame: Problem = {
   problemStatement: `
 <p className="mt-3">
 You are given an integer array <code>nums</code>. You are initially
-positioned at the <strong>first index</strong>and each element in the
+positioned at the <strong>first index</strong> and each element in the
 array represents your maximum jump length at that position.
 </p>
 <p className="mt-3">
-Return <code>true</code> if you can reach the last index, or{" "}
-<code>false</code> otherwise.
+Return <code>true</code> if you can reach the last index, or <code>false</code> otherwise.
 </p>
   `,
 

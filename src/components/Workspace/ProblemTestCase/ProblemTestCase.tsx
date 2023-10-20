@@ -1,4 +1,7 @@
-import { selectTestCaseResults } from "@/redux/features/workspace/workspaceSlice";
+import {
+  selectTestCaseIsExpanded,
+  selectTestCaseResults,
+} from "@/redux/features/workspace/workspaceSlice";
 import { useAppSelector } from "@/redux/hooks";
 import { Problem } from "@/utils/types/problem";
 import { useState } from "react";
@@ -11,10 +14,16 @@ const ProblemTestCase = ({ problem }: Props) => {
   const [activeTestCase, setActiveTestCase] = useState(0);
   const results = useAppSelector(selectTestCaseResults);
 
+  const testCaseIsExpanded = useAppSelector(selectTestCaseIsExpanded);
   // console.log("all user ouptus:", results);
+  // console.log(testCaseIsExpanded, "expanded");
 
   return (
-    <div className="flex w-full flex-col justify-between gap-2 overflow-auto px-5 pb-10">
+    <div
+      className={`${
+        testCaseIsExpanded ? "flex" : "hidden"
+      }  w-full flex-col justify-between gap-2 overflow-auto px-5 pb-10`}
+    >
       <div className="flex flex-col overflow-y-auto">
         {/* Test case heading */}
         <div className="mt-2 flex h-10 items-center gap-6">
