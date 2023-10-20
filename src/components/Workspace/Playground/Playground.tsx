@@ -1,4 +1,5 @@
 import Spinner from "@/components/Loader/Spinner";
+import PlaygroundSetting from "@/components/Modal/PlaygroundSetting";
 import { auth, firestore } from "@/firebase/firebase";
 import { useEditorTheme } from "@/hooks/useEditorTheme";
 import {
@@ -31,6 +32,7 @@ interface ISettings {
 
 const Playground = ({ problem }: Props) => {
   const setTheme = useEditorTheme("dark");
+  const [openSettingsModal, setOpenSettingsModal] = useState(false);
   const [userCode, setUserCode] = useState(problem.starterCode);
   const [settings, setSettings] = useState<ISettings>({
     fontSize: 16,
@@ -161,6 +163,8 @@ const Playground = ({ problem }: Props) => {
         onMount={setTheme}
       />
       <EditorFooter handleSubmit={handleSubmit}></EditorFooter>
+
+      {true && <PlaygroundSetting></PlaygroundSetting>}
     </div>
   );
 };

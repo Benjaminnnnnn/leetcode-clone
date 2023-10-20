@@ -1,8 +1,8 @@
 import logo from "@/asset/logo.png";
 import { login } from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import Image from "next/image";
 import Link from "next/link";
-import { useAppDispatch } from "react-redux";
 
 type Props = {};
 

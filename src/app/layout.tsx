@@ -24,6 +24,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <ToastContainer></ToastContainer>
+          <div id="portal"></div>
         </Providers>
       </body>
     </html>

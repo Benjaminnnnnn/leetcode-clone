@@ -27,7 +27,7 @@ const ProblemTestCase = ({ problem }: Props) => {
       <div className="flex flex-col overflow-y-auto">
         {/* Test case heading */}
         <div className="mt-2 flex h-10 items-center gap-6">
-          <div className="relative flex h-full cursor-pointer flex-col justify-center">
+          <div className="relative z-auto flex h-full cursor-pointer flex-col justify-center">
             <p className="text-sm font-medium leading-5 text-white">
               Testcases
             </p>
@@ -43,7 +43,7 @@ const ProblemTestCase = ({ problem }: Props) => {
                 key={index}
                 className={`${
                   activeTestCase === index ? "bg-stone-500" : "bg-dark-layer-3"
-                } relative inline-flex cursor-pointer items-center whitespace-nowrap rounded px-4 py-1.5 text-sm font-medium transition-all hover:bg-stone-500`}
+                } relative z-auto inline-flex cursor-pointer items-center whitespace-nowrap rounded px-4 py-1.5 text-sm font-medium transition-all hover:bg-stone-500`}
                 onClick={() => setActiveTestCase(index)}
               >
                 <span>Case {index + 1}</span>
