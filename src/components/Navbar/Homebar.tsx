@@ -34,8 +34,6 @@ const Homebar = ({ problemId }: Props) => {
     problems.findIndex((p) => p.id === problemId),
   );
 
-  console.log("re-render homebar");
-
   const handlePreviousProblem = () => {
     if (problemId && problemIndex > 0) {
       setProblemIndex((prevIndex) => prevIndex - 1);
@@ -82,7 +80,8 @@ const Homebar = ({ problemId }: Props) => {
   }, [problemIndex, router, dispatch, problemId]);
 
   return (
-    <div className="w-full border-gray-300 bg-stone-500">
+    <div className="w-full bg-stone-500">
+      {/* // <div className="w-full border-b border-gray-400 bg-dark-layer-1"> */}
       <div
         className={`mx-auto flex ${
           !problemId &&

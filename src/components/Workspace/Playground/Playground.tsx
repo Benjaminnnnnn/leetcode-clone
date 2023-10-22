@@ -4,9 +4,10 @@ import { auth, firestore } from "@/firebase/firebase";
 import { useEditorTheme } from "@/hooks/useEditorTheme";
 import {
   resetTestCaseResults,
+  selectSettingModal,
   updateTestCaseResults,
 } from "@/redux/features/workspace/workspaceSlice";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { problems } from "@/utils/problems";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { Problem, isTestCaseResults } from "@/utils/types/problem";
@@ -24,20 +25,17 @@ type Props = {
   problem: Problem;
 };
 
-interface ISettings {
-  fontSize: number;
-  settingModalIsOpen: boolean;
-  dropdownIsOpen: boolean;
+export interface ISettings {
+  fontSize: string;
+  [key: string]: string;
 }
 
 const Playground = ({ problem }: Props) => {
   const setTheme = useEditorTheme("dark");
-  const [openSettingsModal, setOpenSettingsModal] = useState(false);
+  const settingModalIsOpen = useAppSelector(selectSettingModal);
   const [userCode, setUserCode] = useState(problem.starterCode);
   const [settings, setSettings] = useState<ISettings>({
-    fontSize: 16,
-    settingModalIsOpen: false,
-    dropdownIsOpen: false,
+    fontSize: "16",
   });
   const [user] = useAuthState(auth);
   const { id } = useParams();
@@ -122,7 +120,6 @@ const Playground = ({ problem }: Props) => {
   };
 
   const handleCodeChange = (value: string | undefined) => {
-    // console.log(value);
     if (value) {
       setUserCode(value);
       localStorage.setItem(`code-${id}`, JSON.stringify(value));
@@ -138,6 +135,25 @@ const Playground = ({ problem }: Props) => {
       setUserCode(problem.starterCode);
     }
   }, [id, user, problem.starterCode]);
+
+  // preserve user workspace setting
+  useEffect(() => {
+    if (user) {
+      const savedSettings = { ...settings };
+      for (const preferenceName of Object.keys(settings)) {
+        const preferenceValue = localStorage.getItem(preferenceName);
+        if (preferenceValue) {
+          savedSettings[preferenceName] = preferenceValue;
+        }
+      }
+      setSettings(savedSettings);
+    } else {
+      for (const preferenceName of Object.keys(settings)) {
+        localStorage.removeItem(preferenceName);
+      }
+    }
+  }, [user]);
+
   return (
     <div className="overflow-y-hidden">
       <PreferenceNav></PreferenceNav>
@@ -146,7 +162,7 @@ const Playground = ({ problem }: Props) => {
         language="javascript"
         value={userCode}
         options={{
-          fontSize: settings.fontSize,
+          fontSize: parseInt(settings.fontSize),
           inlineSuggest: {
             enabled: true,
           },
@@ -164,7 +180,12 @@ const Playground = ({ problem }: Props) => {
       />
       <EditorFooter handleSubmit={handleSubmit}></EditorFooter>
 
-      {true && <PlaygroundSetting></PlaygroundSetting>}
+      {settingModalIsOpen && (
+        <PlaygroundSetting
+          settings={settings}
+          setSettings={setSettings}
+        ></PlaygroundSetting>
+      )}
     </div>
   );
 };

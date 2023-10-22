@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background-gutter: #737373;
+  --background-slider-thumb: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-slider-thumb: #404040;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -34,8 +45,7 @@
 }
 
 .gutter {
-  /* background-color: #eee; */
-  background-color: #737373;
+  background-color: var(--background-gutter);
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -54,6 +64,7 @@
   cursor: col-resize;
 }
 
+/* problem description cards */
 code {
   border-radius: 3px;
   border-width: 1px;
@@ -85,9 +96,7 @@ code {
   font-size: 1rem;
 }
 
-/* .example-card pre p {
-  white-space: nowrap;
-} */
+/* home page loading */
 
 .skeleton-box {
   position: relative;
@@ -117,4 +126,26 @@ code {
   100% {
     transform: translateX(100%);
   }
+}
+
+/* input slider */
+input[type="range"] {
+  appearance: none;
+}
+
+/* Chrome, Safari, Edge, Chromium broswers */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background-color: var(--background-slider-thumb);
+  border-radius: 50%;
+  height: 0.75rem;
+  width: 0.75rem;
+}
+
+/* Firefox */
+input[type="range"]::-moz-range-thumb {
+  background-color: var(--background-slider-thumb);
+  border-radius: 50%;
+  height: 0.75rem;
+  width: 0.75rem;
 }

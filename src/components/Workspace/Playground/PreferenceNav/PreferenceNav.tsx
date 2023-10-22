@@ -1,4 +1,6 @@
 import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip";
+import { toggleSettingsModal } from "@/redux/features/workspace/workspaceSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { useEffect, useState } from "react";
 import {
   AiOutlineFullscreen,
@@ -9,6 +11,7 @@ import {
 type Props = {};
 
 const PreferenceNav = (props: Props) => {
+  const dispatch = useAppDispatch();
   const [isFullScreen, setIsFullScreen] = useState(false);
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
@@ -33,15 +36,18 @@ const PreferenceNav = (props: Props) => {
 
   return (
     <>
-      <div className="bg-dark-layer-1 flex h-11 w-full items-center justify-between">
+      <div className="flex h-11 w-full items-center justify-between bg-dark-layer-1">
         <div className="flex items-center px-2 text-white">
-          <button className="bg-dark-layer-2 rounded px-2 py-1.5 text-xs font-medium">
+          <button className="rounded bg-dark-layer-2 px-2 py-1.5 text-xs font-medium">
             JavaScript
           </button>
         </div>
 
         <div className="m-2 flex items-center text-white">
-          <ButtonWithTooltip tooltip={{ text: "Settings" }}>
+          <ButtonWithTooltip
+            tooltip={{ text: "Settings" }}
+            onClick={() => dispatch(toggleSettingsModal(true))}
+          >
             <AiOutlineSetting></AiOutlineSetting>
           </ButtonWithTooltip>
 

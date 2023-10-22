@@ -3,11 +3,13 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
 interface WorkspaceState {
+  settingsModal: boolean;
   testCaseIsExpanded: boolean;
   testCaseResults: TestCaseResults;
 }
 
 const initialState: WorkspaceState = {
+  settingsModal: false,
   testCaseIsExpanded: true,
   testCaseResults: {
     allPassed: false,
@@ -19,6 +21,9 @@ const workspaceSlice = createSlice({
   name: "workspace",
   initialState,
   reducers: {
+    toggleSettingsModal(state, action: PayloadAction<boolean>) {
+      state.settingsModal = action.payload;
+    },
     toggleTestCase(state, action: PayloadAction<boolean>) {
       state.testCaseIsExpanded = action.payload;
     },
@@ -30,6 +35,8 @@ const workspaceSlice = createSlice({
     },
   },
 });
+export const selectSettingModal = (state: RootState) =>
+  state.workspace.settingsModal;
 
 export const selectTestCaseIsExpanded = (state: RootState) =>
   state.workspace.testCaseIsExpanded;
@@ -40,6 +47,10 @@ export const selectTestCaseResults = (state: RootState) =>
 export const selectTestCaseAllPassed = (state: RootState) =>
   state.workspace.testCaseResults.allPassed;
 
-export const { toggleTestCase, updateTestCaseResults, resetTestCaseResults } =
-  workspaceSlice.actions;
+export const {
+  toggleSettingsModal,
+  toggleTestCase,
+  updateTestCaseResults,
+  resetTestCaseResults,
+} = workspaceSlice.actions;
 export default workspaceSlice.reducer;
