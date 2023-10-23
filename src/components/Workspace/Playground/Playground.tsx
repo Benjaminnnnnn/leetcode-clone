@@ -13,7 +13,7 @@ import { toastConfig } from "@/utils/react-toastify/toast";
 import { Problem, isTestCaseResults } from "@/utils/types/problem";
 import { arrayUnion, doc, updateDoc } from "@firebase/firestore";
 import Editor from "@monaco-editor/react";
-import * as acorn from "acorn";
+import acorn from "acorn";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
