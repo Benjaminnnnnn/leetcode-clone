@@ -4,6 +4,7 @@ import code from "@/asset/auth/code_2.png";
 import AuthModal from "@/components/Modal/AuthModal";
 import Navbar from "@/components/Navbar/Navbar";
 import { auth } from "@/firebase/firebase";
+import { useDisableModalBackgroundScroll } from "@/hooks/useDisableModalBackgroundScroll";
 import { selectOpen, signup } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { motion } from "framer-motion";
@@ -22,8 +23,9 @@ const Auth = () => {
   const isOpen = useAppSelector(selectOpen);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
+  useDisableModalBackgroundScroll(isOpen);
   useEffect(() => {
     if (user) {
       setTimeout(() => {
@@ -33,16 +35,16 @@ const Auth = () => {
   }, [user, router]);
 
   // disable scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add("overflow-y-hidden");
-    } else {
-      document.body.classList.remove("overflow-y-hidden");
-    }
-    return () => {
-      document.body.classList.remove("overflow-y-hidden");
-    };
-  }, [isOpen]);
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     document.body.classList.add("overflow-y-hidden");
+  //   } else {
+  //     document.body.classList.remove("overflow-y-hidden");
+  //   }
+  //   return () => {
+  //     document.body.classList.remove("overflow-y-hidden");
+  //   };
+  // }, [isOpen]);
 
   // if (user && !loading) {
   //   return (

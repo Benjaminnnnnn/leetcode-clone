@@ -1,6 +1,6 @@
+import { useDisableModalBackgroundScroll } from "@/hooks/useDisableModalBackgroundScroll";
 import { authModalClose } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { RootState } from "@/redux/store";
 import { SyntheticEvent, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Login from "./Login";
@@ -15,7 +15,8 @@ const AuthModal = ({}: Props) => {
   };
 
   const dispatch = useAppDispatch();
-  const type = useAppSelector((state: RootState) => state.auth.type);
+  const type = useAppSelector((state) => state.auth.type);
+  const isOpen = useAppSelector((state) => state.auth.isOpen);
 
   let formContent;
   if (type === "login") {
@@ -26,6 +27,7 @@ const AuthModal = ({}: Props) => {
     formContent = <ResetPassword></ResetPassword>;
   }
 
+  useDisableModalBackgroundScroll(isOpen);
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
