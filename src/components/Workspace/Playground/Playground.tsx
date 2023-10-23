@@ -50,7 +50,7 @@ const Playground = ({ problem }: Props) => {
     try {
       const problem = problems[id as string];
       // acorn has some type issues, use any as current workaround
-      const parsedCode: any = acorn.parse(userCode, { ecmaVersion: "latest" });
+      const parsedCode = acorn.parse(userCode, { ecmaVersion: "latest" });
 
       // parse user code
       if (parsedCode.body) {
