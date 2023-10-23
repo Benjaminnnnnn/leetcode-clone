@@ -1,14 +1,19 @@
 "use client";
-import { Problem } from "@/mock-data/problems";
+import { auth, firestore } from "@/firebase/firebase";
+import { DBProblem } from "@/utils/types/problem";
+import { DBUser } from "@/utils/types/users";
+import { doc, getDoc } from "firebase/firestore";
+// import { Problem } from "@/mock-data/problems";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { BsCheckCircle } from "react-icons/bs";
 import { IoMdClose } from "react-icons/io";
 import { RiFileVideoLine } from "react-icons/ri";
 import YouTube from "react-youtube";
 
 type Props = {
-  problems: Problem[];
+  problems: DBProblem[];
 };
 
 const ProblemsTableBody = ({ problems }: Props) => {
@@ -16,6 +21,7 @@ const ProblemsTableBody = ({ problems }: Props) => {
     isOpen: false,
     videoId: "",
   });
+  const solvedProblems = useGetUserSolveProblems();
 
   const closeVideo = () => {
     setVideo((prevVideo) => ({ ...prevVideo, isOpen: false }));
@@ -63,7 +69,9 @@ const ProblemsTableBody = ({ problems }: Props) => {
               key={problem.id}
             >
               <th className="whitespace-nowrap px-4 py-4 text-green-500">
-                <BsCheckCircle className="text-lg"></BsCheckCircle>
+                {solvedProblems.includes(problem.id) && (
+                  <BsCheckCircle className="text-lg"></BsCheckCircle>
+                )}
               </th>
               <td className="px-6 py-4">
                 <Link
@@ -126,3 +134,22 @@ const ProblemsTableBody = ({ problems }: Props) => {
 };
 
 export default ProblemsTableBody;
+
+function useGetUserSolveProblems() {
+  const [user] = useAuthState(auth);
+  const [solvedProblems, setSolvedProblems] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchUserSolvedProblems = async () => {
+      const userRef = doc(firestore, "users", user!.uid);
+      const userDoc = await getDoc(userRef);
+      if (userDoc.exists()) {
+        const userData = userDoc.data() as DBUser;
+        setSolvedProblems(userData.solvedProblems);
+      }
+    };
+    fetchUserSolvedProblems();
+  }, [user]);
+
+  return solvedProblems;
+}

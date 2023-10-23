@@ -4,23 +4,35 @@ import { useAppDispatch } from "@/redux/hooks";
 import { ChangeEvent, Dispatch, SetStateAction, SyntheticEvent } from "react";
 import { createPortal } from "react-dom";
 import { AiOutlineClose } from "react-icons/ai";
-import { ISettings } from "../Workspace/Playground/Playground";
 
 type Props = {
-  settings: ISettings;
-  setSettings: Dispatch<SetStateAction<ISettings>>;
+  fontSize: string;
+  formatOnType: string;
+  showMinimap: string;
+  setFontSize: Dispatch<SetStateAction<string>>;
+  setFormatOnType: Dispatch<SetStateAction<string>>;
+  setShowMinimap: Dispatch<SetStateAction<string>>;
 };
 
-const PlaygroundSetting = ({ setSettings, settings }: Props) => {
+const PlaygroundSetting = ({
+  fontSize,
+  formatOnType,
+  showMinimap,
+  setFontSize,
+  setFormatOnType,
+  setShowMinimap,
+}: Props) => {
   const hasMounted = useHasMounted();
   const dispatch = useAppDispatch();
 
   const handleFontSizeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    localStorage.setItem("fontSize", e.target.value);
-    setSettings((prevSettings) => ({
-      ...prevSettings,
-      fontSize: e.target.value,
-    }));
+    setFontSize(e.target.value);
+  };
+  const handleFormatOnTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormatOnType(e.target.checked ? "true" : "false");
+  };
+  const handleShowMinimapChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setShowMinimap(e.target.checked ? "true" : "false");
   };
 
   const closeSettingsModal = (e: SyntheticEvent) => {
@@ -32,11 +44,11 @@ const PlaygroundSetting = ({ setSettings, settings }: Props) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-black/50"
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/30"
       onClick={closeSettingsModal}
     >
       <div
-        className="absolute left-1/2 top-1/2 z-50 mx-auto flex aspect-square h-1/2 max-h-full -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl bg-dark-layer-3 p-4 text-gray-200 shadow-xl"
+        className="absolute left-1/2 top-1/2 z-50 mx-auto flex aspect-square h-1/2 max-h-full -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl bg-dark-layer-1 p-4 text-gray-200 shadow-xl"
         onClick={(e: SyntheticEvent) => e.stopPropagation()}
       >
         {/* header */}
@@ -48,22 +60,59 @@ const PlaygroundSetting = ({ setSettings, settings }: Props) => {
         </div>
 
         {/* body */}
-        <div className="flex flex-col">
-          <div className="mt-2 flex items-center gap-4">
+        <div className="mt-4 flex flex-col space-y-4">
+          <div className="flex items-center justify-between gap-4">
             <label
               htmlFor="editor-font-size"
-              className="block whitespace-nowrap text-sm font-medium"
+              className="flex flex-col whitespace-nowrap text-sm"
             >
-              Font Size: {settings.fontSize}px
+              <span className="font-medium">Font Size {fontSize}px</span>
+              <span className="text-xs">Set code editor font size</span>
             </label>
             <input
               id="editor-font-size"
               type="range"
               min="10"
               max="32"
-              value={settings.fontSize}
+              value={fontSize}
               onChange={handleFontSizeChange}
-              className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 dark:bg-gray-700"
+              className="h-1 w-2/5 cursor-pointer appearance-none rounded-lg bg-gray-200 dark:bg-gray-700"
+            ></input>
+          </div>
+
+          <div className="flex items-center justify-between gap-4">
+            <label
+              htmlFor="editor-format-on-type"
+              className="flex flex-col whitespace-nowrap text-sm"
+            >
+              <span className="font-medium">Format on Type</span>
+              <span className="text-xs">Format your code when you type</span>
+            </label>
+            <input
+              id="editor-format-on-type"
+              type="checkbox"
+              checked={formatOnType === "true" ? true : false}
+              onChange={handleFormatOnTypeChange}
+              className="h-4 w-4 cursor-pointer rounded border-gray-300 bg-gray-100 text-gray-600"
+            ></input>
+          </div>
+
+          <div className="flex items-center justify-between gap-4">
+            <label
+              htmlFor="editor-show-minimap"
+              className="flex flex-col whitespace-nowrap text-sm"
+            >
+              <span className="font-medium">Show Minimap</span>
+              <span className="text-xs">
+                Display minimap for your code editor
+              </span>
+            </label>
+            <input
+              id="editor-show-minimap"
+              type="checkbox"
+              checked={showMinimap === "true" ? true : false}
+              onChange={handleShowMinimapChange}
+              className="h-4 w-4 cursor-pointer rounded border-gray-300 bg-gray-100 text-gray-600"
             ></input>
           </div>
         </div>

@@ -2,6 +2,7 @@ import Spinner from "@/components/Loader/Spinner";
 import PlaygroundSetting from "@/components/Modal/PlaygroundSetting";
 import { auth, firestore } from "@/firebase/firebase";
 import { useEditorTheme } from "@/hooks/useEditorTheme";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import {
   resetTestCaseResults,
   selectSettingModal,
@@ -13,7 +14,7 @@ import { toastConfig } from "@/utils/react-toastify/toast";
 import { Problem, isTestCaseResults } from "@/utils/types/problem";
 import { arrayUnion, doc, updateDoc } from "@firebase/firestore";
 import Editor from "@monaco-editor/react";
-import acorn from "acorn";
+import * as acorn from "acorn";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -33,10 +34,17 @@ export interface ISettings {
 const Playground = ({ problem }: Props) => {
   const setTheme = useEditorTheme("dark");
   const settingModalIsOpen = useAppSelector(selectSettingModal);
+  const [fontSize, setFontSize] = useLocalStorage("font-size", "16");
+  const [formatOnType, setFormatOnType] = useLocalStorage(
+    "format-on-type",
+    "true",
+  );
+  const [showMinimap, setShowMinimap] = useLocalStorage("show-minimap", "true");
+
   const [userCode, setUserCode] = useState(problem.starterCode);
-  const [settings, setSettings] = useState<ISettings>({
-    fontSize: "16",
-  });
+  // const [settings, setSettings] = useState<ISettings>({
+  //   fontSize,
+  // });
   const [user] = useAuthState(auth);
   const { id } = useParams();
   const dispatch = useAppDispatch();
@@ -71,7 +79,6 @@ const Playground = ({ problem }: Props) => {
             const outputs = handlerFunction(callback);
             if (isTestCaseResults(outputs)) {
               dispatch(updateTestCaseResults(outputs));
-              console.log(outputs);
               if (outputs.allPassed) {
                 toast.success("All test cases have passed!", {
                   ...toastConfig,
@@ -137,24 +144,6 @@ const Playground = ({ problem }: Props) => {
     }
   }, [id, user, problem.starterCode]);
 
-  // preserve user workspace setting
-  useEffect(() => {
-    if (user) {
-      const savedSettings = { ...settings };
-      for (const preferenceName of Object.keys(settings)) {
-        const preferenceValue = localStorage.getItem(preferenceName);
-        if (preferenceValue) {
-          savedSettings[preferenceName] = preferenceValue;
-        }
-      }
-      setSettings(savedSettings);
-    } else {
-      for (const preferenceName of Object.keys(settings)) {
-        localStorage.removeItem(preferenceName);
-      }
-    }
-  }, [user]);
-
   return (
     <div className="overflow-y-hidden">
       <PreferenceNav></PreferenceNav>
@@ -163,18 +152,19 @@ const Playground = ({ problem }: Props) => {
         language="javascript"
         value={userCode}
         options={{
-          fontSize: parseInt(settings.fontSize),
+          fontSize: parseInt(fontSize),
           inlineSuggest: {
             enabled: true,
           },
           minimap: {
+            enabled: showMinimap === "true" ? true : false,
             side: "right",
             scale: 5,
             maxColumn: 100,
             size: "fill",
           },
           formatOnPaste: true,
-          formatOnType: true,
+          formatOnType: formatOnType === "true" ? true : false,
         }}
         onChange={handleCodeChange}
         onMount={setTheme}
@@ -183,8 +173,12 @@ const Playground = ({ problem }: Props) => {
 
       {settingModalIsOpen && (
         <PlaygroundSetting
-          settings={settings}
-          setSettings={setSettings}
+          fontSize={fontSize}
+          formatOnType={formatOnType}
+          showMinimap={showMinimap}
+          setFontSize={setFontSize}
+          setFormatOnType={setFormatOnType}
+          setShowMinimap={setShowMinimap}
         ></PlaygroundSetting>
       )}
     </div>
