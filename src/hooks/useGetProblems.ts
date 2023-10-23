@@ -1,5 +1,4 @@
 import { firestore } from "@/firebase/firebase";
-import { sleep } from "@/utils/sleep";
 import { DBProblem } from "@/utils/types/problem";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -12,7 +11,7 @@ export const useGetProblems = (
   useEffect(() => {
     const fetchProbelms = async () => {
       setLoadingProblems(true);
-      await sleep(10000);
+      // await sleep(10000);
       const problemsRef = collection(firestore, "problems");
       const q = query(problemsRef, orderBy("order"));
       const problemDocs = await getDocs(q);

@@ -1,5 +1,6 @@
 import { auth, firestore } from "@/firebase/firebase";
 import { authModalClose, login } from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { emailRegex, passwordRegex } from "@/utils/formValidation";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { DBUser } from "@/utils/types/users";
@@ -7,7 +8,6 @@ import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { useAppDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Button from "../Form/FormButton";
 import Input from "../Form/FormInput";
