@@ -50,12 +50,12 @@ const Playground = ({ problem }: Props) => {
     try {
       const problem = problems[id as string];
       // acorn has some type issues, use any as current workaround
-      const parsedCode = acorn.parse(userCode, { ecmaVersion: "latest" });
+      const parsedCode: any = acorn.parse(userCode, { ecmaVersion: "latest" });
 
       // parse user code
       if (parsedCode.body) {
         const functionNode = parsedCode.body.find(
-          (node) => node.type === "FunctionDeclaration",
+          (node: any) => node.type === "FunctionDeclaration",
         );
 
         if (functionNode) {
