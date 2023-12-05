@@ -2,8 +2,8 @@
     <h1>A LeetCode Clone Designed to Scale Fast</h1>
     <p>The goal of this project is to build a LeetCode clone with ergonomic web editor and provide seamless coding interview preparation experience.</p>
     <div>
-        <img src="https://raw.githubusercontent.com/Benjaminnnnnn/leetcode-clone/main/public/home.png"></img>
-        <img src="https://raw.githubusercontent.com/Benjaminnnnnn/leetcode-clone/main/public/workspace.png"></img>
+        <img src="https://raw.githubusercontent.com/Benjaminnnnnn/leetcode-clone/main/public/home.png" alt="home page"></img>
+        <img src="https://raw.githubusercontent.com/Benjaminnnnnn/leetcode-clone/main/public/workspace.png" alt="workspace page"></img>
     </div>
 </div>
 
