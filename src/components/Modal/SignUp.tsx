@@ -48,7 +48,7 @@ const SignUp = (props: Props) => {
       if (newUser) {
         toast.loading("Creating your account", {
           ...toastConfig,
-          autoClose: false,
+          autoClose: 5000,
           toastId: "loadingNotification",
         });
         // create new user in firestore
@@ -65,7 +65,7 @@ const SignUp = (props: Props) => {
         };
         await setDoc(doc(firestore, "users", newUser.user.uid), userData);
 
-        router.push("/");
+        // router.push("/");
         dispatch(authModalClose());
       } else {
         toast.error("Email already exists!", toastConfig);

@@ -42,7 +42,7 @@ const Login = (props: Props) => {
       );
       if (loggedUser) {
         // toast.success("Logged in successfully. Redirecting...", toastConfig);
-        router.push("/");
+        // router.push("/");
         dispatch(authModalClose());
       } else {
         toast.error("Unable to log in.", toastConfig);

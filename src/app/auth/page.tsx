@@ -28,9 +28,10 @@ const Auth = () => {
   useDisableModalBackgroundScroll(isOpen);
   useEffect(() => {
     if (user) {
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
+      router.back();
+      // setTimeout(() => {
+      //   router.push("/");
+      // }, 3000);
     }
   }, [user, router]);
 
