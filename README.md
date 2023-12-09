@@ -5,6 +5,10 @@
         <img src="https://raw.githubusercontent.com/Benjaminnnnnn/leetcode-clone/main/public/home.png" alt="home page"></img>
         <img src="https://raw.githubusercontent.com/Benjaminnnnnn/leetcode-clone/main/public/workspace.png" alt="workspace page"></img>
     </div>
+    <div>
+        <img src="https://raw.githubusercontent.com/Benjaminnnnnn/leetcode-clone/main/public/home_dark.png" alt="home page dark mode"></img>
+        <img src="https://raw.githubusercontent.com/Benjaminnnnnn/leetcode-clone/main/public/workspace_dark.png" alt="workspace page dark mode"></img>
+    </div>
 </div>
 
 ## Getting Started
