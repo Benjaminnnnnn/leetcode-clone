@@ -24,6 +24,6 @@ Visit [Deployment Website](https://leetcode-clone-indol.vercel.app/) to get star
 - [ ] Add more problems
 - [ ] Add user profile page
 - [ ] Add playgrounds for development
-- [ ] Add search
+- [ ] Add search (cmd k)
 - [ ] Add other lanuage support (Python, Java, Go, Rust, etc.)
 - [ ] ...
