@@ -141,11 +141,15 @@ function useGetUserSolveProblems() {
 
   useEffect(() => {
     const fetchUserSolvedProblems = async () => {
-      const userRef = doc(firestore, "users", user!.uid);
-      const userDoc = await getDoc(userRef);
-      if (userDoc.exists()) {
-        const userData = userDoc.data() as DBUser;
-        setSolvedProblems(userData.solvedProblems);
+      try {
+        const userRef = doc(firestore, "users", user!.uid);
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data() as DBUser;
+          setSolvedProblems(userData.solvedProblems);
+        }
+      } catch (error) {
+        setSolvedProblems([]);
       }
     };
     fetchUserSolvedProblems();

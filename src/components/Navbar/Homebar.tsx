@@ -97,6 +97,10 @@ const Homebar = ({ problemId }: Props) => {
           <span className="hidden sm:block">LeetCode</span>
         </Link>
 
+        {/* <Link href="/playground" className="relative flex items-center">
+          <span className="">Playground</span>
+        </Link> */}
+
         {problemId && (
           <div className="hidden items-center justify-center gap-1 sm:flex">
             <ButtonWithTooltip
