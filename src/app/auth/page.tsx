@@ -2,7 +2,7 @@
 // import code from "@/asset/auth/code.svg";
 import code from "@/asset/auth/code_2.png";
 import AuthModal from "@/components/Modal/AuthModal";
-import Navbar from "@/components/Navbar/Navbar";
+import AuthNavBar from "@/components/Navbar/AuthNavbar";
 import { auth } from "@/firebase/firebase";
 import { useDisableModalBackgroundScroll } from "@/hooks/useDisableModalBackgroundScroll";
 import { selectOpen, signup } from "@/redux/features/auth/authSlice";
@@ -60,7 +60,7 @@ const Auth = () => {
       <div className="fixed inset-0 -z-10 hidden bg-stone-100 qhd:block"></div>
       <div className={`bg-neutral-700} w-screen`}>
         <div className="mx-auto flex min-h-screen max-w-screen-qhd flex-col">
-          <Navbar></Navbar>
+          <AuthNavBar></AuthNavBar>
           <div className="mx-auto grid w-full flex-1 grid-rows-3 sm:grid-flow-dense sm:grid-cols-2 sm:grid-rows-2">
             <div className="pointer-events-none hidden select-none items-center justify-center bg-neutral-700 sm:flex">
               <motion.div

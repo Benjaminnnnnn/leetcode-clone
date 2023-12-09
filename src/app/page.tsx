@@ -1,5 +1,5 @@
 "use client";
-import Homebar from "@/components/Navbar/Homebar";
+import Navbar from "@/components/Navbar/Navbar";
 import ProblemsSkeleton from "@/components/Skeleton/ProblemsSkeleton";
 import ProblemsTableBody from "@/components/Table/ProblemsTableBody";
 import { firestore } from "@/firebase/firebase";
@@ -46,7 +46,7 @@ export default function Home() {
   return (
     <>
       <main className="min-h-screen w-screen bg-neutral-700">
-        <Homebar></Homebar>
+        <Navbar></Navbar>
 
         <div className="relative mx-auto flex max-w-screen-2xl overflow-x-auto py-4 sm:px-6 sm:py-10">
           {loadingProblems ? (

@@ -1,4 +1,4 @@
-import Homebar from "@/components/Navbar/Homebar";
+import Navbar from "@/components/Navbar/Navbar";
 import Workspace from "@/components/Workspace/Workspace";
 import { problems } from "@/utils/problems";
 import { notFound } from "next/navigation";
@@ -28,7 +28,7 @@ const ProblemDetail = ({ params: { id } }: Props) => {
 
   return (
     <div className="flex h-screen flex-col">
-      <Homebar problemId={id}></Homebar>
+      <Navbar problemId={id}></Navbar>
       <Workspace problem={problem}></Workspace>
     </div>
   );
