@@ -7,21 +7,24 @@ interface ThemeState {
 }
 
 // initializes the "mode" state by reading from localstorage
-// const initializeModeState = (): Theme => {
-//   try {
-//     if (typeof window !== undefined) {
-//       const theme = localStorage.getItem("theme") as Theme;
-//       return theme;
-//     }
-//   } catch (error) {}
-//   return "light";
-// };
+const initializeModeState = (): Theme => {
+  try {
+    if (typeof window !== undefined && localStorage) {
+      const theme = localStorage.getItem("theme") as Theme;
+      return theme;
+    }
+    return "light";
+  } catch (error) {
+    return "light";
+  }
+};
 
 const initialState: ThemeState = {
-  mode:
-    typeof window !== undefined
-      ? (localStorage.getItem("theme") as Theme)
-      : "light",
+  mode: initializeModeState(),
+  // mode:
+  //   typeof window !== undefined
+  //     ? (localStorage.getItem("theme") as Theme)
+  //     : "light",
 };
 
 const themeSlice = createSlice({
