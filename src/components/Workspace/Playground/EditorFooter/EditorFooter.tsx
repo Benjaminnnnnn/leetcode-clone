@@ -17,9 +17,13 @@ const EditorFooter = ({ handleSubmit }: Props) => {
     "px-4 py-1.5 font-medium items-center transition-all inline-flex rounded-lg text-sm";
 
   return (
-    <div className="z-100 absolute bottom-0 mx-auto flex w-full shrink-0 flex-nowrap items-center justify-between gap-2 overflow-x-auto bg-dark-layer-2 p-2 text-white">
+    <div
+      className="z-100 absolute bottom-0 mx-auto flex w-full shrink-0
+      flex-nowrap items-center justify-between gap-2 overflow-x-auto border-t border-accent p-2"
+    >
       <button
-        className={`${buttonStyles} flex items-center gap-0.5 bg-white/10 hover:bg-stone-500`}
+        className={`${buttonStyles} flex items-center gap-0.5 bg-white/10
+        hover:bg-foreground hover:text-primary-foreground`}
         onClick={() => {
           dispatch(toggleTestCase(!testCaseIsExpanded));
         }}
@@ -35,7 +39,7 @@ const EditorFooter = ({ handleSubmit }: Props) => {
       </button>
       <div className="flex items-center gap-2">
         <button
-          className={`${buttonStyles} bg-white/10 hover:bg-stone-500`}
+          className={`${buttonStyles} bg-white/10 hover:bg-foreground hover:text-primary-foreground`}
           onClick={handleSubmit}
         >
           Run

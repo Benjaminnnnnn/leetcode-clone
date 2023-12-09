@@ -4,9 +4,11 @@ import ProblemsSkeleton from "@/components/Skeleton/ProblemsSkeleton";
 import ProblemsTableBody from "@/components/Table/ProblemsTableBody";
 import { firestore } from "@/firebase/firebase";
 import { useGetProblems } from "@/hooks/useGetProblems";
+import { selectTheme } from "@/redux/features/theme/themeSlice";
+import { useAppSelector } from "@/redux/hooks";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { doc, setDoc } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Home() {
@@ -43,9 +45,15 @@ export default function Home() {
     toast.success("Added a new problem", toastConfig);
   };
 
+  const theme = useAppSelector(selectTheme);
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
+
   return (
     <>
-      <main className="min-h-screen w-screen bg-neutral-700">
+      {/* <main className="min-h-screen w-screen bg-neutral-700"> */}
+      <main className="min-h-screen w-screen">
         <Navbar></Navbar>
 
         <div className="relative mx-auto flex max-w-screen-2xl overflow-x-auto py-4 sm:px-6 sm:py-10">
@@ -53,7 +61,7 @@ export default function Home() {
             <ProblemsSkeleton></ProblemsSkeleton>
           ) : (
             <table className="mx-auto w-full text-left text-sm sm:w-4/5">
-              <thead className="text-xs font-medium uppercase text-gray-400">
+              <thead className="text-xs font-medium uppercase text-muted-foreground">
                 <tr>
                   <th scope="col" className="px-4 py-3">
                     Status

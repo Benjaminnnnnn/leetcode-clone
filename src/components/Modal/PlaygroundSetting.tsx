@@ -44,11 +44,13 @@ const PlaygroundSetting = ({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-black/30"
+      className="fixed inset-0 z-50 overflow-y-auto bg-muted/50"
       onClick={closeSettingsModal}
     >
       <div
-        className="absolute left-1/2 top-1/2 z-50 mx-auto flex aspect-square h-1/2 max-h-full -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl bg-dark-layer-1 p-4 text-gray-200 shadow-xl"
+        className="absolute left-1/2 top-1/2 z-50 mx-auto flex aspect-square
+        h-1/2 max-h-full -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl
+        bg-popover p-4 shadow-xl"
         onClick={(e: SyntheticEvent) => e.stopPropagation()}
       >
         {/* header */}
@@ -76,7 +78,7 @@ const PlaygroundSetting = ({
               max="32"
               value={fontSize}
               onChange={handleFontSizeChange}
-              className="h-1 w-2/5 cursor-pointer appearance-none rounded-lg bg-gray-200 dark:bg-gray-700"
+              className="h-1 w-2/5 cursor-pointer appearance-none rounded-lg bg-popover-foreground"
             ></input>
           </div>
 

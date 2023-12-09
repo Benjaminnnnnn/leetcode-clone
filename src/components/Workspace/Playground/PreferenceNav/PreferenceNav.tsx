@@ -36,15 +36,16 @@ const PreferenceNav = (props: Props) => {
 
   return (
     <>
-      <div className="flex h-11 w-full items-center justify-between bg-dark-layer-1">
-        <div className="flex items-center px-2 text-white">
-          <button className="rounded bg-dark-layer-2 px-2 py-1.5 text-xs font-medium">
+      <div className="flex h-11 w-full items-center justify-between border-b border-accent bg-[#cccccc]/20">
+        <div className="flex items-center px-2 ">
+          <button className="rounded px-2 py-1.5 text-xs font-medium">
             JavaScript
           </button>
         </div>
 
-        <div className="m-2 flex items-center text-white">
+        <div className="m-2 flex items-center">
           <ButtonWithTooltip
+            className="text-primary"
             tooltip={{ text: "Settings" }}
             onClick={() => dispatch(toggleSettingsModal(true))}
           >
@@ -52,6 +53,7 @@ const PreferenceNav = (props: Props) => {
           </ButtonWithTooltip>
 
           <ButtonWithTooltip
+            className="text-primary"
             tooltip={{
               text: !isFullScreen ? "Enter Full Screen" : "Exit Full Screen",
               options: { alignment: "left" },

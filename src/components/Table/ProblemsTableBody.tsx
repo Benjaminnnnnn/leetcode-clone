@@ -2,6 +2,7 @@
 import { auth, firestore } from "@/firebase/firebase";
 import { DBProblem } from "@/utils/types/problem";
 import { DBUser } from "@/utils/types/users";
+import clsx from "clsx";
 import { doc, getDoc } from "firebase/firestore";
 // import { Problem } from "@/mock-data/problems";
 import Link from "next/link";
@@ -63,9 +64,13 @@ const ProblemsTableBody = ({ problems }: Props) => {
 
           return (
             <tr
-              className={`${
-                idx % 2 == 1 && "bg-dark-layer-3"
-              } bg-dark-layer-2 text-white`}
+              className={clsx(
+                {
+                  "bg-background": idx % 2 == 1,
+                  "bg-accent": idx % 2 == 0,
+                },
+                "text-foreground",
+              )}
               key={problem.id}
             >
               <th className="whitespace-nowrap px-4 py-4 text-green-500">
@@ -114,7 +119,7 @@ const ProblemsTableBody = ({ problems }: Props) => {
           className="fixed inset-0 flex items-center justify-center bg-black/70"
           // onClick={closeVideo}
         >
-          <div className="relative flex h-screen w-full flex-col justify-center gap-2 md:w-1/2 hd:w-2/5">
+          <div className="hd:w-2/5 relative flex h-screen w-full flex-col justify-center gap-2 md:w-1/2">
             <IoMdClose
               className="h-8 w-8 cursor-pointer self-end text-white"
               onClick={closeVideo}

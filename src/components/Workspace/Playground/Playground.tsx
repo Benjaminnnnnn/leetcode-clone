@@ -3,6 +3,7 @@ import PlaygroundSetting from "@/components/Modal/PlaygroundSetting";
 import { auth, firestore } from "@/firebase/firebase";
 import { useEditorTheme } from "@/hooks/useEditorTheme";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { selectTheme } from "@/redux/features/theme/themeSlice";
 import {
   resetTestCaseResults,
   selectSettingModal,
@@ -26,13 +27,9 @@ type Props = {
   problem: Problem;
 };
 
-export interface ISettings {
-  fontSize: string;
-  [key: string]: string;
-}
-
 const Playground = ({ problem }: Props) => {
-  const setTheme = useEditorTheme("dark");
+  const setEditorTheme = useEditorTheme();
+  const theme = useAppSelector(selectTheme);
   const settingModalIsOpen = useAppSelector(selectSettingModal);
   const [fontSize, setFontSize] = useLocalStorage("font-size", "16");
   const [formatOnType, setFormatOnType] = useLocalStorage(
@@ -40,11 +37,7 @@ const Playground = ({ problem }: Props) => {
     "true",
   );
   const [showMinimap, setShowMinimap] = useLocalStorage("show-minimap", "true");
-
   const [userCode, setUserCode] = useState(problem.starterCode);
-  // const [settings, setSettings] = useState<ISettings>({
-  //   fontSize,
-  // });
   const [user] = useAuthState(auth);
   const { id } = useParams();
   const dispatch = useAppDispatch();
@@ -148,7 +141,12 @@ const Playground = ({ problem }: Props) => {
     <div className="overflow-y-hidden">
       <PreferenceNav></PreferenceNav>
       <Editor
-        loading={<Spinner width="w-16"></Spinner>}
+        key={theme}
+        loading={
+          <div className="flex items-center justify-center">
+            <Spinner width="w-16"></Spinner>
+          </div>
+        }
         language="javascript"
         value={userCode}
         options={{
@@ -167,7 +165,7 @@ const Playground = ({ problem }: Props) => {
           formatOnType: formatOnType === "true" ? true : false,
         }}
         onChange={handleCodeChange}
-        onMount={setTheme}
+        onMount={setEditorTheme}
       />
       <EditorFooter handleSubmit={handleSubmit}></EditorFooter>
 
