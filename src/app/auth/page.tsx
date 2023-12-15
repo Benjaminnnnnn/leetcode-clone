@@ -1,10 +1,10 @@
 "use client";
 import code from "@/asset/auth/code_2.png";
-import code_snippet from "@/asset/auth/code_snippet.png";
 import AuthModal from "@/components/Modal/AuthModal";
 import Navbar from "@/components/Navbar/Navbar";
 import { auth } from "@/firebase/firebase";
 import { useDisableModalBackgroundScroll } from "@/hooks/useDisableModalBackgroundScroll";
+import { cn } from "@/lib/utils";
 import { selectOpen, signup } from "@/redux/features/auth/authSlice";
 import { selectTheme } from "@/redux/features/theme/themeSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -17,9 +17,9 @@ import { AiOutlineRight } from "react-icons/ai";
 
 const Auth = () => {
   const informationContainerStyles =
-    "flex items-center justify-center bg-black h-96 sm:h-full";
+    "flex h-96 items-center justify-center rounded-lg shadow border sm:h-full";
   const informationStyles =
-    "flex max-w-sm flex-col gap-6 px-10 text-center sm:text-left items-center sm:items-start";
+    "flex max-w-sm flex-col items-center gap-6 px-10 text-center sm:items-start sm:text-left";
 
   const isOpen = useAppSelector(selectOpen);
   const dispatch = useAppDispatch();
@@ -64,10 +64,12 @@ const Auth = () => {
       <div className={`w-screen`}>
         <div className="mx-auto flex min-h-screen max-w-screen-qhd flex-col">
           <Navbar></Navbar>
-          <div className="mx-auto grid w-full flex-1 grid-rows-3 gap-2 p-2 sm:grid-flow-dense sm:grid-cols-2 sm:grid-rows-2">
+          <div className="mx-auto grid w-full flex-1 grid-rows-3 gap-2 p-2 sm:grid-flow-dense sm:grid-cols-2 sm:grid-rows-2 sm:gap-4 sm:p-4">
             <div
-              className="pointer-events-none hidden select-none items-center
-            justify-center sm:flex"
+              className={cn(
+                informationContainerStyles,
+                "pointer-events-none hidden select-none sm:flex",
+              )}
             >
               <motion.div
                 animate={{ y: [0, 12, 0, -12, 0] }}
@@ -88,33 +90,37 @@ const Auth = () => {
               </motion.div>
             </div>
             <div
-              className="relative flex flex-col items-center justify-center
-              gap-4 bg-black
-              sm:col-start-2 sm:col-end-3 sm:gap-6"
+              className={cn(
+                informationContainerStyles,
+                "relative flex flex-col gap-4 sm:col-start-2 sm:col-end-3 sm:gap-6",
+              )}
             >
-              <div className="absolute -z-10 mx-auto">
+              {/* <div className="absolute -z-10 mx-auto">
                 <Image
                   src={code_snippet}
                   alt="Golang code snippet"
                   height={400}
                   width={400}
                 ></Image>
-              </div>
-              <h1 className="bg-transparent text-xl font-medium text-white sm:text-2xl md:text-4xl">
+              </div> */}
+              <h1 className="bg-gradient-primary bg-clip-text text-xl font-medium text-transparent sm:text-2xl md:text-4xl">
                 Learn through Code
               </h1>
-              <p className="text-xs font-medium text-white sm:text-sm md:text-base">
+              <p className="text-xs font-medium  sm:text-sm md:text-base">
                 Get you ready to work.
               </p>
-              <button
-                className="inline-flex items-center gap-1 rounded-lg border px-4 py-2 text-white outline-none transition-all hover:bg-primary-foreground hover:text-primary active:shadow-inner"
-                onClick={() => {
-                  dispatch(signup());
-                }}
-              >
-                Create Account
-                <AiOutlineRight></AiOutlineRight>
-              </button>
+
+              <div className="bg-gradient-primary rounded-xl p-0.5">
+                <button
+                  className="inline-flex w-full items-center gap-1 rounded-[10px] bg-background px-4 py-2 transition-all hover:bg-primary hover:text-primary-foreground"
+                  onClick={() => {
+                    dispatch(signup());
+                  }}
+                >
+                  Create Account
+                  <AiOutlineRight></AiOutlineRight>
+                </button>
+              </div>
             </div>
 
             <div className={informationContainerStyles}>
@@ -122,7 +128,7 @@ const Auth = () => {
                 <h1 className="text-xl font-medium text-blue-500 sm:text-3xl md:text-3xl">
                   Questions
                 </h1>
-                <p className="text-white">
+                <p>
                   Join the community and gain access to over 200 best coding
                   interview questions. Be active, be prepared, and practice now.
                   Chanllegene yourself and learn through quesitions, not through
@@ -142,7 +148,7 @@ const Auth = () => {
                 <h1 className="text-xl font-medium text-yellow-700 sm:text-3xl md:text-3xl">
                   Opprtunities
                 </h1>
-                <p className="text-white">
+                <p>
                   Not only does LeetCode prepare candidates for technical
                   interviews, we also provide industrial opportunities. We
                   identify top technical talent from contests to online
