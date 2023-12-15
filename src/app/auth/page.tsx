@@ -60,7 +60,7 @@ const Auth = () => {
 
   return (
     <>
-      <div className="fixed inset-0 -z-10 hidden bg-stone-100 qhd:block"></div>
+      <div className="fixed inset-0 -z-10 hidden qhd:block"></div>
       <div className={`w-screen`}>
         <div className="mx-auto flex min-h-screen max-w-screen-qhd flex-col">
           <Navbar></Navbar>
@@ -110,7 +110,7 @@ const Auth = () => {
                 Get you ready to work.
               </p>
 
-              <div className="bg-gradient-primary rounded-xl p-0.5">
+              <div className="rounded-xl  p-0.5">
                 <button
                   className="inline-flex w-full items-center gap-1 rounded-[10px] bg-background px-4 py-2 transition-all hover:bg-primary hover:text-primary-foreground"
                   onClick={() => {
