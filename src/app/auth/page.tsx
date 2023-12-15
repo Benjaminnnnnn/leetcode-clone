@@ -110,7 +110,7 @@ const Auth = () => {
                 Get you ready to work.
               </p>
 
-              <div className="rounded-xl  p-0.5">
+              <div className="bg-gradient-primary rounded-xl p-0.5">
                 <button
                   className="inline-flex w-full items-center gap-1 rounded-[10px] bg-background px-4 py-2 transition-all hover:bg-primary hover:text-primary-foreground"
                   onClick={() => {
