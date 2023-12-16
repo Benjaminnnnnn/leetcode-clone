@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 type Props = {
   children: React.ReactNode;
   tooltip?: {
@@ -24,7 +26,10 @@ const KeyButton = ({ keys }: KeyButtonProps) => {
   return (
     <p className="flex items-center gap-1">
       {keys.map((key, idx) => (
-        <kbd className="rounded border border-gray-50 px-1" key={idx}>
+        <kbd
+          className="rounded border border-primary-foreground px-1 text-primary-foreground"
+          key={idx}
+        >
           {key}
         </kbd>
       ))}
@@ -61,7 +66,10 @@ const Tooltip = ({ children, alignment, position }: TooltipProps) => {
 
   return (
     <div
-      className={`${alignmentStyles} ${positionStyles} absolute top-8 z-[9999] flex scale-0 items-center gap-1 whitespace-nowrap rounded bg-black/95 px-2 py-1 text-xs shadow-lg transition-all duration-300 ease-in-out group-hover:scale-100 group-disabled:hidden`}
+      className={`${alignmentStyles} ${positionStyles} absolute top-8 z-[9999]
+      flex scale-0 items-center gap-1 whitespace-nowrap rounded bg-foreground
+      px-2 py-1 text-xs text-primary-foreground shadow-lg transition-all duration-300
+      ease-in-out group-hover:scale-100 group-disabled:hidden`}
     >
       {children}
     </div>
@@ -77,15 +85,17 @@ const ButtonWithTooltip = ({
   return (
     <>
       <button
-        className={`group relative flex items-center gap-1 px-2 py-1 disabled:cursor-not-allowed disabled:text-gray-400 disabled:opacity-50 ${
-          className && className
-        }`}
+        className={cn(
+          `group relative flex items-center gap-1 px-2 py-1
+          disabled:cursor-not-allowed disabled:text-muted disabled:opacity-50`,
+          className,
+        )}
         {...props}
       >
         {children}
         {tooltip && (
           <Tooltip {...tooltip.options}>
-            <p>{tooltip.text}</p>
+            <p className="text-primary-foreground">{tooltip.text}</p>
             {tooltip.keyboardNavigation && (
               <KeyButton keys={tooltip.keyboardNavigation}></KeyButton>
             )}

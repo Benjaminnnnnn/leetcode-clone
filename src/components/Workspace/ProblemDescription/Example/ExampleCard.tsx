@@ -15,9 +15,7 @@ const ExampleCard = ({
 }: Props) => {
   return (
     <div>
-      <p className="whitespace-nowrap font-medium text-white">
-        Example {index + 1}:
-      </p>
+      <p className="whitespace-nowrap font-medium">Example {index + 1}:</p>
       {img && (
         <img
           src={img}

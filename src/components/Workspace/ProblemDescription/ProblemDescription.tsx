@@ -2,11 +2,14 @@ import ButtonWithTooltip from "@/components/Button/ButtonWithTooltip";
 import Spinner from "@/components/Loader/Spinner";
 import ProblemDescriptionTabSkeleton from "@/components/Skeleton/ProblemDescriptionTabSkeleton";
 import { auth, firestore } from "@/firebase/firebase";
+import { cn } from "@/lib/utils";
+import { selectTheme } from "@/redux/features/theme/themeSlice";
 import { selectTestCaseAllPassed } from "@/redux/features/workspace/workspaceSlice";
 import { useAppSelector } from "@/redux/hooks";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { DBProblem, Problem } from "@/utils/types/problem";
 import { DBUser } from "@/utils/types/users";
+import clsx from "clsx";
 import {
   Transaction,
   arrayRemove,
@@ -273,8 +276,11 @@ const ProblemDescription = ({ problem }: Props) => {
     <>
       <div className="overflow-y-auto">
         {/* TAB */}
-        <div className="flex h-11 w-full items-end bg-dark-layer-1 text-white">
-          <p className="cursor-pointer rounded-t bg-dark-layer-2 px-4 py-2 text-xs">
+        <div className="flex h-11 w-full items-center border-b border-accent bg-[#cccccc]/20 px-4">
+          <p
+            className="flex h-full cursor-pointer items-center rounded-t
+          border-b-2 border-primary px-4 text-xs font-semibold"
+          >
             Description
           </p>
         </div>
@@ -283,7 +289,7 @@ const ProblemDescription = ({ problem }: Props) => {
           <div className="w-full space-y-3 px-4">
             {/* Problem heading */}
             <div className="flex">
-              <div className="mr-2 flex-1 whitespace-nowrap text-lg font-medium text-white">
+              <div className="mr-2 flex-1 whitespace-nowrap text-lg font-medium ">
                 {problem.title}
               </div>
             </div>
@@ -292,23 +298,34 @@ const ProblemDescription = ({ problem }: Props) => {
             {!loading && currentProblem ? (
               <div className="flex items-center gap-4">
                 <div
-                  className={`${difficultyClass} inline-flex items-center rounded-xl bg-opacity-[0.15] px-3 py-1 text-xs font-medium capitalize`}
+                  className={`${difficultyClass} inline-flex items-center
+                  rounded-xl bg-opacity-[0.15] px-3 py-1 text-xs font-medium
+                  capitalize`}
                 >
                   {currentProblem.difficulty}
                 </div>
                 {(solved || allPassed) && (
-                  <div className="cursor-pointer rounded p-2 text-lg text-teal-600 transition-colors duration-200 hover:text-teal-300">
+                  <div
+                    className="cursor-pointer rounded p-2 text-lg
+                  text-teal-600 transition-colors duration-200
+                  hover:text-teal-300"
+                  >
                     <BsCheck2Circle />
                   </div>
                 )}
                 <div
-                  className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                  className="group flex cursor-pointer items-center space-x-0.5
+                  rounded p-1 text-lg text-muted-foreground transition-colors
+                  duration-200"
                   onClick={handleLike}
                 >
                   <AiFillLike
-                    className={`${
-                      liked && "text-blue-500"
-                    } group-hover:text-blue-500`}
+                    className={clsx(
+                      {
+                        "text-blue-500": liked,
+                      },
+                      "group-hover:text-primary",
+                    )}
                   />
                   {updating ? (
                     <Spinner></Spinner>
@@ -317,13 +334,18 @@ const ProblemDescription = ({ problem }: Props) => {
                   )}
                 </div>
                 <div
-                  className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                  className="group flex cursor-pointer items-center space-x-0.5
+                  rounded p-1 text-lg text-muted-foreground transition-colors
+                  duration-200"
                   onClick={handleDislike}
                 >
                   <AiFillDislike
-                    className={`${
-                      disliked && "text-blue-500"
-                    } group-hover:text-blue-500`}
+                    className={clsx(
+                      {
+                        "text-blue-500": disliked,
+                      },
+                      "group-hover:text-primary",
+                    )}
                   />
                   {updating ? (
                     <Spinner></Spinner>
@@ -333,7 +355,9 @@ const ProblemDescription = ({ problem }: Props) => {
                 </div>
 
                 <ButtonWithTooltip
-                  className="group flex cursor-pointer items-center space-x-0.5 rounded p-1 text-lg text-gray-400 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+                  className="group flex cursor-pointer items-center space-x-0.5
+                  rounded p-1 text-lg text-muted-foreground transition-colors
+                  duration-200"
                   tooltip={{
                     text: "Add to favorite list",
                   }}
@@ -342,7 +366,14 @@ const ProblemDescription = ({ problem }: Props) => {
                   {updating ? (
                     <Spinner></Spinner>
                   ) : (
-                    <AiFillStar className={`${starred && "text-yellow-500"}`} />
+                    <AiFillStar
+                      className={clsx(
+                        {
+                          "text-yellow-500": starred,
+                        },
+                        "group-hover:text-primary",
+                      )}
+                    />
                   )}
                 </ButtonWithTooltip>
               </div>
@@ -353,7 +384,7 @@ const ProblemDescription = ({ problem }: Props) => {
             )}
 
             {/* problem statement */}
-            <div className="problem-statement text-sm text-white">
+            <div className="problem-statement text-sm ">
               <div
                 className="space-y-2"
                 dangerouslySetInnerHTML={{
@@ -377,8 +408,8 @@ const ProblemDescription = ({ problem }: Props) => {
 
             {/* Constraints */}
             <div className="my-8 pb-4">
-              <p className="text-sm font-medium text-white">Constraints:</p>
-              <ul className="ml-5 list-disc text-white">
+              <p className="text-sm font-medium">Constraints:</p>
+              <ul className="ml-5 list-disc">
                 <div
                   className="min-w-min space-y-1"
                   dangerouslySetInnerHTML={{
@@ -402,6 +433,7 @@ function useGetCurrentProblem(problemId: string) {
   const [currentProblem, setCurrentProblem] = useState<DBProblem>();
   const [loading, setLoading] = useState(false);
   const [difficultyClass, setDifficultyClass] = useState("");
+  const theme = useAppSelector(selectTheme);
 
   useEffect(() => {
     const fetchProblem = async () => {
@@ -417,11 +449,13 @@ function useGetCurrentProblem(problemId: string) {
 
         setCurrentProblem(problem);
         setDifficultyClass(
-          difficulty === "easy"
-            ? "text-teal-300 bg-teal-500"
-            : difficulty === "medium"
-            ? "text-yellow-500 bg-yellow-500"
-            : "text-red-500 bg-red-500",
+          cn({
+            "text-teal-300 bg-teal-500": difficulty === "easy",
+            "text-teal-500 bg-teal-500":
+              difficulty === "easy" && theme === "light",
+            "text-yellow-500 bg-yellow-500": difficulty === "medium",
+            "text-red-500 bg-red-500": difficulty === "hard",
+          }),
         );
         setLoading(false);
       } else {

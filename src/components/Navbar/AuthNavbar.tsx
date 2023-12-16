@@ -7,10 +7,9 @@ import Link from "next/link";
 type Props = {};
 
 /**
- * AuthNavBar is similar to the normal Navbar with less functionalities.
- * It basically shows the website icon and a login button.
+ * !DEPRECATED: This component is deprecated and no longer used.
  */
-const AuthNavBar = ({}: Props) => {
+const AuthNavbar = ({}: Props) => {
   const dispatch = useAppDispatch();
 
   return (
@@ -39,4 +38,4 @@ const AuthNavBar = ({}: Props) => {
   );
 };
 
-export default AuthNavBar;
+export default AuthNavbar;

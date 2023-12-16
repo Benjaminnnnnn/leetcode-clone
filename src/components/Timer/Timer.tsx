@@ -58,7 +58,7 @@ const Timer = (props: Props) => {
             position: "loose",
           },
         }}
-        className="rounded hover:bg-stone-400 max-sm:hidden"
+        className="rounded max-sm:hidden"
         onClick={toggleTimer}
       >
         {showTimer ? (
