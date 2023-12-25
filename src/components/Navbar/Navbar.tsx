@@ -114,9 +114,6 @@ const Navbar = ({ problemId }: Props) => {
           {!problemId && (
             <div className="flex gap-6">
               <NavbarItem to={"/playground"} name={"Playground"} />
-              <NavbarItem to={"/"} name={"Problems"} />
-              <NavbarItem to={"/"} name={"Interviews"} />
-              <NavbarItem to={"/"} name={"About"} />
             </div>
           )}
         </div>
