@@ -11,7 +11,7 @@ const initializeModeState = (): Theme => {
   try {
     if (typeof window !== undefined && localStorage) {
       const theme = localStorage.getItem("theme") as Theme;
-      return theme;
+      return theme || "light";
     }
     return "light";
   } catch (error) {
@@ -21,10 +21,6 @@ const initializeModeState = (): Theme => {
 
 const initialState: ThemeState = {
   mode: initializeModeState(),
-  // mode:
-  //   typeof window !== undefined
-  //     ? (localStorage.getItem("theme") as Theme)
-  //     : "light",
 };
 
 const themeSlice = createSlice({
