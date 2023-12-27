@@ -40,7 +40,7 @@ const Playground = ({ params: { type } }: Props) => {
   }
 
   return (
-    <div className="grow border md:mx-20 lg:mx-32 xl:mx-48">
+    <div className="grow overflow-y-auto border md:mx-20 lg:mx-32 xl:mx-48">
       <div className="h-1/2">
         <Editor
           key={theme}
