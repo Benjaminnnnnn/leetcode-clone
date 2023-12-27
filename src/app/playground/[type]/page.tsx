@@ -40,46 +40,45 @@ const Playground = ({ params: { type } }: Props) => {
   }
 
   return (
-    <div className="h-[calc(100vh-64px)] border md:mx-20 lg:mx-32 xl:mx-48">
-      <Editor
-        key={theme}
-        language={type}
-        value={userCode}
-        height="50%"
-        options={{
-          fontSize: 14,
-          inlineSuggest: {
-            enabled: true,
-          },
-          minimap: {
-            enabled: true,
-            side: "right",
-            scale: 5,
-            maxColumn: 100,
-            size: "proportional",
-          },
-          formatOnPaste: true,
-          formatOnType: true,
-        }}
-        onChange={handleCodeChange}
-        onMount={setEditorTheme}
-      />
-      <div className="h-1/2 w-full border-t">
+    <div className="grow border md:mx-20 lg:mx-32 xl:mx-48">
+      <div className="h-1/2">
+        <Editor
+          key={theme}
+          language={type}
+          value={userCode}
+          options={{
+            fontSize: 14,
+            inlineSuggest: {
+              enabled: true,
+            },
+            minimap: {
+              enabled: true,
+              side: "right",
+              scale: 5,
+              maxColumn: 100,
+              size: "proportional",
+            },
+            formatOnPaste: true,
+            formatOnType: true,
+          }}
+          onChange={handleCodeChange}
+          onMount={setEditorTheme}
+        />
+      </div>
+      <div className="flex h-1/2 w-full flex-col border-t">
         <div className="flex items-center justify-between border-b p-1">
-          <div>Console output:</div>
-          <button onClick={runCode} className="rounded-lg bg-blue-500 p-2 px-4">
+          <div className="text-blue-500">Console output:</div>
+          <button
+            onClick={runCode}
+            className="rounded-lg bg-blue-500 p-2 px-4 text-white"
+          >
             Run
           </button>
         </div>
-        <div className="p-2">
-          <p>
-            {consoleLog.split("\n").map((line, index) => (
-              <span key={index}>
-                {line}
-                <br />
-              </span>
-            ))}
-          </p>
+        <div className="h-full grow overflow-y-auto p-2">
+          {consoleLog.split("\n").map((line, index) => (
+            <section key={index}>{line}</section>
+          ))}
         </div>
       </div>
     </div>
