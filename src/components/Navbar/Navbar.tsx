@@ -23,6 +23,7 @@ import { PiListFill } from "react-icons/pi";
 import ButtonWithTooltip from "../Button/ButtonWithTooltip";
 import Timer from "../Timer/Timer";
 import Logout from "./Logout";
+import NavbarItem from "./NavbarItem";
 
 type Props = {
   problemId?: string;
@@ -101,18 +102,21 @@ const Navbar = ({ problemId }: Props) => {
           "mx-auto flex items-center justify-between px-4 py-2 text-sm font-medium text-foreground",
         )}
       >
-        <Link href="/" className="relative flex items-center">
-          <Image
-            className="w-10 md:w-12"
-            src={theme === "light" ? logo_black : logo}
-            alt="leetcode clone logo"
-          />
-          <span className="hidden sm:block">LeetCode</span>
-        </Link>
-
-        {/* <Link href="/playground" className="relative flex items-center">
-          <span className="">Playground</span>
-        </Link> */}
+        <div className="flex  items-center">
+          <Link href="/" className="relative mr-8 flex items-center">
+            <Image
+              className="w-10 md:w-12"
+              src={theme === "light" ? logo_black : logo}
+              alt="leetcode clone logo"
+            />
+            <span className="hidden sm:block">LeetCode</span>
+          </Link>
+          {!problemId && (
+            <div className="flex gap-6">
+              <NavbarItem to={"/playground"} name={"Playground"} />
+            </div>
+          )}
+        </div>
 
         {problemId && (
           <div className="hidden items-center justify-center gap-1 sm:flex">

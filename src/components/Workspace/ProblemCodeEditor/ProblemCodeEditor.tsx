@@ -27,7 +27,7 @@ type Props = {
   problem: Problem;
 };
 
-const Playground = ({ problem }: Props) => {
+const ProblemCodeEditor = ({ problem }: Props) => {
   const setEditorTheme = useEditorTheme();
   const theme = useAppSelector(selectTheme);
   const settingModalIsOpen = useAppSelector(selectSettingModal);
@@ -183,4 +183,4 @@ const Playground = ({ problem }: Props) => {
   );
 };
 
-export default Playground;
+export default ProblemCodeEditor;

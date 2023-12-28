@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Problem } from "@/utils/types/problem";
 import { useEffect } from "react";
 import Split from "react-split";
-import Playground from "./Playground/Playground";
+import ProblemCodeEditor from "./ProblemCodeEditor/ProblemCodeEditor";
 import ProblemDescription from "./ProblemDescription/ProblemDescription";
 import ProblemTestCase from "./ProblemTestCase/ProblemTestCase";
 
@@ -43,7 +43,7 @@ const Workspace = ({ problem }: Props) => {
           }
         }}
       >
-        <Playground problem={problem}></Playground>
+        <ProblemCodeEditor problem={problem}></ProblemCodeEditor>
         <ProblemTestCase problem={problem}></ProblemTestCase>
       </Split>
     </Split>
