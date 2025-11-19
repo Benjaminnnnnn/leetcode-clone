@@ -4,11 +4,9 @@ import ProblemsSkeleton from "@/components/Skeleton/ProblemsSkeleton";
 import ProblemsTableBody from "@/components/Table/ProblemsTableBody";
 import { firestore } from "@/firebase/firebase";
 import { useGetProblems } from "@/hooks/useGetProblems";
-import { selectTheme } from "@/redux/features/theme/themeSlice";
-import { useAppSelector } from "@/redux/hooks";
 import { toastConfig } from "@/utils/react-toastify/toast";
 import { doc, setDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Home() {
@@ -44,11 +42,6 @@ export default function Home() {
     await setDoc(doc(firestore, "problems", inputs.id), newProblem);
     toast.success("Added a new problem", toastConfig);
   };
-
-  const theme = useAppSelector(selectTheme);
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
 
   return (
     <>

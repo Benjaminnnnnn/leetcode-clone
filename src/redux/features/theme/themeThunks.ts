@@ -5,12 +5,12 @@ export type Theme = "light" | "dark";
 
 export const toggleThemeThunk = (): AppThunk => async (dispatch, getState) => {
   try {
-    if (typeof window !== undefined && localStorage) {
-      const newTheme = (
-        localStorage.getItem("theme") === "light" ? "dark" : "light"
-      ) as Theme;
+    const canUseBrowserStorage =
+      typeof window !== "undefined" && typeof localStorage !== "undefined";
+    if (canUseBrowserStorage) {
+      const currentTheme = getState().theme.mode;
+      const newTheme = (currentTheme === "light" ? "dark" : "light") as Theme;
       localStorage.setItem("theme", newTheme);
-      document.documentElement.classList.toggle("dark", newTheme === "dark");
       dispatch(toggleTheme(newTheme));
     }
   } catch (error) {

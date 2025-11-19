@@ -85,10 +85,6 @@ const Navbar = ({ problemId }: Props) => {
     }
   }, [problemIndex, router, dispatch, problemId]);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
-
   return (
     // <div className="w-full bg-stone-500">
     <div className="w-full border-b border-accent">

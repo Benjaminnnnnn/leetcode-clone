@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar/Navbar";
 import Workspace from "@/components/Workspace/Workspace";
 import { problems } from "@/utils/problems";
+import { Problem } from "@/utils/types/problem";
 import { notFound } from "next/navigation";
 
 type Props = {
@@ -24,12 +25,15 @@ const ProblemDetail = ({ params: { id } }: Props) => {
     notFound();
   }
   // solve serialization between client and server component
-  problem.handlerFunction = problem.handlerFunction.toString();
+  const serializedProblem: Problem = {
+    ...problem,
+    handlerFunction: problem.handlerFunction.toString(),
+  };
 
   return (
     <div className="flex h-screen flex-col">
       <Navbar problemId={id}></Navbar>
-      <Workspace problem={problem}></Workspace>
+      <Workspace problem={serializedProblem}></Workspace>
     </div>
   );
 };

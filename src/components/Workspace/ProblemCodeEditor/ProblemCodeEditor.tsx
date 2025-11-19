@@ -27,6 +27,52 @@ type Props = {
   problem: Problem;
 };
 
+const parseUserFunction = (userCode: string) => {
+  const parsedCode: any = acorn.parse(userCode, { ecmaVersion: "latest" });
+  if (!parsedCode.body) {
+    throw new Error("User code is not a valid function!");
+  }
+
+  const functionNode = parsedCode.body.find(
+    (node: any) => node.type === "FunctionDeclaration",
+  );
+
+  if (!functionNode) {
+    throw new Error("User code is not a valid function!");
+  }
+
+  const functionBody = userCode.slice(functionNode.start, functionNode.end);
+  const callback = new Function(`return ${functionBody}`)();
+
+  if (typeof callback !== "function") {
+    throw new Error("Parsed code is not executable.");
+  }
+
+  return callback;
+};
+
+const getSubmitErrorMessage = (error: any): string => {
+  const message = (error as Error)?.message || "Unknown error";
+
+  if (
+    message.startsWith(
+      "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal",
+    )
+  ) {
+    return "One or more test cases failed.";
+  }
+
+  if (message.startsWith("Unterminated regular expression")) {
+    return message;
+  }
+
+  if (message.startsWith("Unexpected token")) {
+    return message;
+  }
+
+  return "Something went wrong! Please try again";
+};
+
 const ProblemCodeEditor = ({ problem }: Props) => {
   const setEditorTheme = useEditorTheme();
   const theme = useAppSelector(selectTheme);
@@ -48,72 +94,42 @@ const ProblemCodeEditor = ({ problem }: Props) => {
       return;
     }
 
+    const problemId = id as string | undefined;
+    const problemDefinition = problemId ? problems[problemId] : undefined;
+
+    if (
+      !problemDefinition ||
+      typeof problemDefinition.handlerFunction !== "function"
+    ) {
+      toast.error("Unable to run tests for this problem.", toastConfig);
+      return;
+    }
+
     try {
-      const problem = problems[id as string];
-      // acorn has some type issues, use any as current workaround
-      const parsedCode: any = acorn.parse(userCode, { ecmaVersion: "latest" });
+      const userSolution = parseUserFunction(userCode);
+      const outputs = problemDefinition.handlerFunction(userSolution);
 
-      // parse user code
-      if (parsedCode.body) {
-        const functionNode = parsedCode.body.find(
-          (node: any) => node.type === "FunctionDeclaration",
-        );
+      if (!isTestCaseResults(outputs)) {
+        throw new Error("Problem handler did not return test results.");
+      }
 
-        if (functionNode) {
-          const functionBody = userCode.slice(
-            functionNode.start,
-            functionNode.end,
-          );
+      dispatch(updateTestCaseResults(outputs));
+      if (outputs.allPassed) {
+        toast.success("All test cases have passed!", {
+          ...toastConfig,
+          autoClose: 5000,
+        });
 
-          // convert user code to actual function and evaluate
-          const callback = new Function(`return ${functionBody}`)();
-          const handlerFunction = problem.handlerFunction;
-          if (handlerFunction instanceof Function) {
-            const outputs = handlerFunction(callback);
-            if (isTestCaseResults(outputs)) {
-              dispatch(updateTestCaseResults(outputs));
-              if (outputs.allPassed) {
-                toast.success("All test cases have passed!", {
-                  ...toastConfig,
-                  autoClose: 5000,
-                });
-
-                const userRef = doc(firestore, "users", user.uid);
-                await updateDoc(userRef, {
-                  solvedProblems: arrayUnion(id),
-                });
-              } else {
-                toast.error("One or more test cases failed.", toastConfig);
-              }
-            }
-          } else {
-            throw new Error(
-              `${id}: handlerFunction property is not a function: `,
-            );
-          }
-        } else {
-          throw new Error("User code is not a valid function!");
-        }
+        const userRef = doc(firestore, "users", user.uid);
+        await updateDoc(userRef, {
+          solvedProblems: arrayUnion(id),
+        });
+      } else {
+        toast.error("One or more test cases failed.", toastConfig);
       }
     } catch (error: any) {
-      let errorMessage;
       dispatch(resetTestCaseResults());
-      if (
-        error.message.startsWith(
-          "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal",
-        )
-      ) {
-        errorMessage = "One or more test cases failed.";
-      } else if (error.message.startsWith("Unterminated regular expression")) {
-        errorMessage = error.message;
-      } else if ((error.message.startsWith("Unexpected token"), toastConfig)) {
-        errorMessage = error.message;
-      } else {
-        console.log(error.message);
-        errorMessage = "Something went wrong! Please try again";
-      }
-
-      toast.error(errorMessage, {
+      toast.error(getSubmitErrorMessage(error), {
         ...toastConfig,
         autoClose: 5000,
       });
