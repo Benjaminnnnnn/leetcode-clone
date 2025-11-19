@@ -17,6 +17,7 @@ const ExampleCard = ({
     <div>
       <p className="whitespace-nowrap font-medium">Example {index + 1}:</p>
       {img && (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={img}
           alt={`example ${index + 1}`}

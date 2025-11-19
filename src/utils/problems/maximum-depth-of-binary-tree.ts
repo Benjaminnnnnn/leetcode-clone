@@ -3,14 +3,18 @@ import { Problem, TestCaseResults } from "../types/problem";
 const starterCodeMaxDepth =
   "function maxDepth(root) {\n\t// root is an array representation of level order traversal\n\t// Write your code here\n}";
 
-const buildTree = (values: Array<number | null>) => {
+type TreeNode = { val: number; left: TreeNode | null; right: TreeNode | null };
+
+const buildTree = (values: Array<number | null>): TreeNode | null => {
   if (!values.length) return null;
-  const nodes = values.map((v) => (v === null ? null : { val: v, left: null, right: null }));
+  const nodes: Array<TreeNode | null> = values.map((v) =>
+    v === null ? null : { val: v, left: null, right: null },
+  );
   for (let i = 0, j = 1; j < nodes.length; i++) {
     if (nodes[i]) {
-      nodes[i]!.left = nodes[j++] || null;
+      nodes[i]!.left = (nodes[j++] as TreeNode | null) || null;
       if (j < nodes.length) {
-        nodes[i]!.right = nodes[j++] || null;
+        nodes[i]!.right = (nodes[j++] as TreeNode | null) || null;
       }
     }
   }

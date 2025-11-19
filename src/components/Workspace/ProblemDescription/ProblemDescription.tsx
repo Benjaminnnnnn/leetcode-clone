@@ -464,7 +464,7 @@ function useGetCurrentProblem(problemId: string) {
       }
     };
     fetchProblem();
-  }, [problemId]);
+  }, [problemId, theme]);
 
   return { currentProblem, loading, difficultyClass, setCurrentProblem };
 }

@@ -26,7 +26,8 @@ const buildCycledList = (values: number[], pos: number) => {
   });
 
   if (tail && cycleNode) {
-    tail.next = cycleNode;
+    const tailNode: ListNode = tail;
+    tailNode.next = cycleNode;
   }
   return head;
 };

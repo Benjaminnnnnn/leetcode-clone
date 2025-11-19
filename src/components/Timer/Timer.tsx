@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { FiRefreshCcw } from "react-icons/fi";
 import { IoTimerOutline } from "react-icons/io5";
 import ButtonWithTooltip from "../Button/ButtonWithTooltip";
@@ -24,17 +24,18 @@ const Timer = (props: Props) => {
     setTime(0);
   };
 
-  const handleKeyToggleTimer = (e: KeyboardEvent) => {
+  const handleKeyToggleTimer = useCallback((e: KeyboardEvent) => {
     if (e.ctrlKey && e.shiftKey && e.key === "O") {
       e.preventDefault();
       toggleTimer();
     }
-  };
+  }, []);
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyToggleTimer);
-    return () => window.removeEventListener("keydown", handleKeyToggleTimer);
-  }, []);
+    const listener = (event: KeyboardEvent) => handleKeyToggleTimer(event);
+    window.addEventListener("keydown", listener);
+    return () => window.removeEventListener("keydown", listener);
+  }, [handleKeyToggleTimer]);
 
   useEffect(() => {
     let id: NodeJS.Timeout;

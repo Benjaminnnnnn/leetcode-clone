@@ -15,7 +15,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { CgProfile } from "react-icons/cg";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -40,43 +40,46 @@ const Navbar = ({ problemId }: Props) => {
   const pathname = usePathname();
   const theme = useAppSelector(selectTheme);
 
-  const handlePreviousProblem = () => {
+  const handlePreviousProblem = useCallback(() => {
     if (problemId && problemIndex > 0) {
       setProblemIndex((prevIndex) => prevIndex - 1);
     }
-  };
+  }, [problemId, problemIndex]);
 
-  const handleNextProblem = () => {
+  const handleNextProblem = useCallback(() => {
     if (problemId && problemIndex < problems.length - 1) {
       setProblemIndex((prevIndex) => prevIndex + 1);
     }
-  };
+  }, [problemId, problemIndex]);
 
-  const handleKeyPress = (e: KeyboardEvent) => {
-    if (e.ctrlKey) {
-      if (e.key in ["h", "j", "k"]) {
-        e.preventDefault();
+  const handleKeyPress = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.ctrlKey) {
+        if (["h", "j", "k"].includes(e.key)) {
+          e.preventDefault();
+        }
+        switch (e.key) {
+          case "h":
+            router.push("/");
+            break;
+          case "j":
+            handlePreviousProblem();
+            break;
+          case "k":
+            handleNextProblem();
+            break;
+        }
       }
-      switch (e.key) {
-        case "h":
-          router.push("/");
-          break;
-        case "j":
-          handlePreviousProblem();
-          break;
-        case "k":
-          handleNextProblem();
-          break;
-      }
-    }
-  };
+    },
+    [router, handlePreviousProblem, handleNextProblem],
+  );
 
   useEffect(() => {
-    if (problemId) {
-      window.addEventListener("keydown", handleKeyPress);
-      return () => window.removeEventListener("keydown", handleKeyPress);
-    }
-  }, []);
+    if (!problemId) return;
+    const listener = (e: KeyboardEvent) => handleKeyPress(e);
+    window.addEventListener("keydown", listener);
+    return () => window.removeEventListener("keydown", listener);
+  }, [problemId, handleKeyPress]);
 
   useEffect(() => {
     if (problemId) {

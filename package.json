@@ -20,6 +20,7 @@
     "axios": "^1.6.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "date-fns": "^4.1.0",
     "eslint-config-next": "13.4.19",
     "firebase": "^10.4.0",
     "framer-motion": "^10.16.4",
