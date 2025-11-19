@@ -9,7 +9,9 @@ interface ThemeState {
 // initializes the "mode" state by reading from localstorage
 const initializeModeState = (): Theme => {
   try {
-    if (typeof window !== undefined && localStorage) {
+    const canUseBrowserStorage =
+      typeof window !== "undefined" && typeof localStorage !== "undefined";
+    if (canUseBrowserStorage) {
       const theme = localStorage.getItem("theme") as Theme;
       return theme || "light";
     }

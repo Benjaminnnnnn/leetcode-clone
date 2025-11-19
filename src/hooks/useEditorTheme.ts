@@ -37,7 +37,7 @@ export const useEditorTheme = () => {
     useState<editor.IStandaloneThemeData>(getEditorTheme(theme));
 
   useEffect(() => {
-    setMonacoEditorTheme(getEditorTheme(theme === "light" ? "dark" : "light"));
+    setMonacoEditorTheme(getEditorTheme(theme));
   }, [theme]);
 
   const handleEditorDidMount = (

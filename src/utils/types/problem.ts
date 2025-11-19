@@ -9,7 +9,7 @@ export type Example = {
 // Single test case result and outputs
 export type TestCaseResult = {
   passed: boolean;
-  userOutputs: Number[];
+  userOutputs: any[];
 };
 
 // All test cases results and outputs

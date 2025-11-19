@@ -6,7 +6,6 @@ import { auth } from "@/firebase/firebase";
 import { useDisableModalBackgroundScroll } from "@/hooks/useDisableModalBackgroundScroll";
 import { cn } from "@/lib/utils";
 import { selectOpen, signup } from "@/redux/features/auth/authSlice";
-import { selectTheme } from "@/redux/features/theme/themeSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -52,11 +51,6 @@ const Auth = () => {
   //     </>
   //   );
   // }
-
-  const theme = useAppSelector(selectTheme);
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
 
   return (
     <>
